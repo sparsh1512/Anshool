@@ -1,0 +1,3182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anshool Agarwal</title>
+
+  <!--
+    FONTS
+    AfterQuery uses proprietary fonts:
+      Sans  → ABCDiatype  (closest Google Font: Inter)
+      Serif → MartinaPlantijn  (closest Google Font: EB Garamond)
+      Mono  → Fragment Mono
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=EB+Garamond:wght@400&family=Fragment+Mono&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ═══════════════════════════════════════
+       EXACT DESIGN TOKENS  (sourced from afterquery.com CSS + computed styles)
+    ═══════════════════════════════════════ */
+    :root {
+      /* ── Palette ── */
+      --bg:              #f8f8f3;
+      --bg-alt:          #f6f5ee;
+      --ink:             #000000;
+      --ink-90:          rgba(0,0,0,0.9);
+      --ink-80:          rgba(0,0,0,0.8);
+      --ink-70:          rgba(0,0,0,0.7);
+      --ink-60:          rgba(0,0,0,0.6);
+      --ink-55:          rgba(0,0,0,0.55);
+      --ink-40:          rgba(0,0,0,0.4);
+      --ink-06:          rgba(0,0,0,0.06);
+      --inverse:         #f8f8f3;   /* text on dark bg */
+      --inverse-90:      rgba(255,255,255,0.9);
+      --inverse-70:      rgba(255,255,255,0.7);
+      --border:          rgba(0,0,0,0.1);
+
+      --gold:            #e8a85f;
+      --green:           #026340;
+      --taupe:           #af9888;
+      --careers-bg:      #4a4220;  /* dark olive for careers banner */
+
+      /* ── Fonts ── */
+      --sans:   'Inter', system-ui, sans-serif;
+      --serif:  'EB Garamond', Georgia, 'Times New Roman', serif;
+      --mono:   'Fragment Mono', ui-monospace, monospace;
+
+      /* ── Spacing (base = 0.25rem = 4px) ── */
+      --sp1:  0.25rem;   --sp2:  0.5rem;    --sp3:  0.75rem;
+      --sp4:  1rem;      --sp5:  1.25rem;   --sp6:  1.5rem;
+      --sp8:  2rem;      --sp10: 2.5rem;    --sp12: 3rem;
+      --sp14: 3.5rem;    --sp16: 4rem;      --sp20: 5rem;
+      --sp24: 6rem;
+
+      /* ── Border radius ── */
+      --r-full: 9999px;
+      --r-sm:   0.25rem;
+      --r-md:   0.5rem;
+    }
+
+    /* ═══════════════════════════════════════
+       RESET
+    ═══════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: auto; }
+    body {
+      font-family: var(--sans);
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--ink);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+    }
+    a    { color: inherit; text-decoration: none; }
+    img  { display: block; max-width: 100%; }
+    ul   { list-style: none; }
+
+    /* ═══════════════════════════════════════
+       LAYOUT
+    ═══════════════════════════════════════ */
+    .wrap {
+      width: 100%;
+      max-width: 1280px;
+      margin-inline: auto;
+      padding-inline: clamp(1rem, 5vw, 4rem);
+    }
+
+    /* ═══════════════════════════════════════
+       1. ANNOUNCEMENT BAR
+       Font: sans 14px/20px weight 500
+       Color: rgba(255,255,255,0.9) on #000
+    ═══════════════════════════════════════ */
+    .bar {
+      background: #000;
+      padding: var(--sp2) var(--sp4);
+      text-align: center;
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 20px;
+      color: rgba(255,255,255,0.9);
+    }
+    .bar a {
+      color: rgba(255,255,255,0.9);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      margin-left: var(--sp2);
+    }
+    .bar a::after { content: '↗'; margin-left: 2px; }
+
+    /* ═══════════════════════════════════════
+       2. NAVBAR
+       Layout: logo LEFT | links CENTERED (absolute) | buttons RIGHT
+       Links: sans 14px weight 500 rgba(0,0,0,0.8)
+       Buttons: pill, sans 14px weight 500, py-2 px-3
+    ═══════════════════════════════════════ */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--bg);
+      /* AfterQuery has NO bottom border on the nav — confirmed from computed styles */
+    }
+    /* Full-bleed nav container — no max-width, just side padding */
+    .nav__inner {
+      display: flex;
+      align-items: center;
+      height: 56px;
+      padding-inline: clamp(1rem, 4vw, 3.5rem);
+      position: relative;   /* needed for absolute-centered links */
+    }
+
+    /* Logo — hard left */
+    .nav__logo {
+      display: flex;
+      align-items: center;
+      gap: var(--sp2);
+      font-family: var(--sans);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--ink);
+      flex-shrink: 0;
+      z-index: 1;
+    }
+    .nav__logo svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+    /* Nav links — TRULY CENTERED on the page via absolute positioning */
+    .nav__links {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: var(--sp6);
+    }
+    .nav__links a {
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 20px;
+      color: rgba(0,0,0,0.8);
+      white-space: nowrap;
+      transition: color 0.15s;
+      position: relative;
+    }
+    .nav__links a:hover { color: var(--ink); }
+    /* AfterQuery exact underline: absolute, bottom -2px, 1px, scaleX 0→1 from left */
+    .nav__links a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: rgba(0,0,0,0.9);
+      transform: scaleX(0);
+      transform-origin: left center;
+      transition: transform 0.3s cubic-bezier(0.23, 0.98, 0.56, 1);
+    }
+    .nav__links a:hover::after,
+    .nav__links a.nav-active::after { transform: scaleX(1); }
+
+    /* CTA buttons — hard right */
+    .nav__ctas {
+      display: flex;
+      align-items: center;
+      gap: var(--sp2);
+      margin-left: auto;
+      z-index: 1;
+    }
+
+    /* ── Button base ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--sans);
+      font-size: 14px;        /* exact: 14px */
+      font-weight: 500;       /* exact: 500  */
+      line-height: 20px;
+      border-radius: var(--r-full);  /* exact: ~2.2e7px = fully pill */
+      padding: 0.5rem 0.75rem;       /* py-2 px-3 = 8px 12px */
+      border: none;
+      cursor: pointer;
+      white-space: nowrap;
+      text-decoration: none;
+      transition: background 0.15s, color 0.15s;
+    }
+    /* Secondary / ghost */
+    .btn--ghost {
+      background: rgba(0,0,0,0.06);  /* exact bg */
+      color: rgba(0,0,0,0.8);        /* exact color */
+    }
+    .btn--ghost:hover { background: rgba(0,0,0,0.1); }
+    /* Primary / solid */
+    .btn--solid {
+      background: rgba(0,0,0,0.9);   /* exact bg */
+      color: #f8f8f3;                 /* exact color = --inverse */
+    }
+    .btn--solid:hover { background: #000; }
+
+    /* ═══════════════════════════════════════
+       3. HERO
+       AfterQuery's exact hero layout:
+         Section padding: pt-20 (80px top), no bottom padding
+         Content column: mx-auto w-[min(100%-2rem, 688px)] — narrow, centered
+         Below content: full-bleed B&W image
+       H1: serif 46px weight 400 lh 1.1 ls -0.01em
+       Sub: serif 20px weight 400 lh 1.2 rgba(0,0,0,0.55)
+    ═══════════════════════════════════════ */
+    .hero {
+      padding-top: var(--sp20);   /* pt-20 = 80px */
+      background: var(--bg);
+    }
+    /* AfterQuery hero content: left-padded section matching the nav logo alignment */
+    .hero__top {
+      width: min(calc(100% - 2rem), 688px);
+      margin-inline: auto;
+      padding-bottom: var(--sp6);
+      margin-left: clamp(1rem, 22vw, 340px);
+      margin-right: auto;
+    }
+
+    .hero__h2 {
+      font-family: var(--serif);
+      font-size: 3.25rem;
+      font-weight: 400;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      white-space: nowrap;
+      margin-bottom: var(--sp2);
+    }
+    .hero__h4 {
+      font-family: var(--serif);
+      font-size: 1.75rem;   /* H3.5 — between H3 and H4 */
+      font-weight: 400;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: var(--sp5);
+    }
+    .hero__h1 {
+      font-family: var(--serif);
+      font-size: 2.75rem;
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      white-space: nowrap;
+      margin-bottom: var(--sp6);
+    }
+
+    .hero__sub {
+      margin-bottom: var(--sp4);
+      margin-top: var(--sp5);
+    }
+    .hero__sub-intro {
+      font-family: var(--serif);
+      font-size: 1.325rem;
+      font-weight: 400;
+      line-height: 1.4;
+      color: rgba(0,0,0,0.55);
+      max-width: 52ch;
+      margin-bottom: 2px;
+    }
+    .hero__sub-q {
+      margin-bottom: 0;
+      margin-top: 2px;
+      max-width: 53.865ch;
+      font-style: italic;
+      font-family: 'Century Schoolbook', 'Century', 'Book Antiqua', Palatino, Georgia, serif;
+    }
+    /* Site-style bullets */
+    .hero__sub-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp1);
+    }
+    .hero__sub-list li {
+      font-family: var(--serif);
+      font-size: 1.325rem;  /* 18px — same as sub-intro */
+      font-weight: 400;
+      line-height: 1.55;
+      color: rgba(0,0,0,0.55);
+      padding-left: 1.2em;
+      position: relative;
+    }
+    .hero__sub-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.52em;
+      width: 3.5px;
+      height: 3.5px;
+      border-radius: 50%;   /* round bullet */
+      background: rgba(0,0,0,0.35);
+      flex-shrink: 0;
+    }
+
+    .hero__ctas {
+      display: flex;
+      align-items: center;
+      gap: var(--sp2);
+    }
+
+    /* Hero contained image — 3-segment hover */
+    .hero__img-wrap {
+      position: relative;
+      width: calc(100% - 120px);
+      margin: 0 60px;
+      overflow: hidden;
+    }
+    .hero__segments {
+      display: flex;
+      width: 100%;
+      aspect-ratio: 16 / 6;
+    }
+    .hero__seg {
+      flex: 1;
+      position: relative;
+      background-image: url('hero.jpg.png');
+      background-size: 300% 100%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: filter 0.4s ease, background-size 0.4s ease;
+    }
+    .hero__seg:hover {
+      background-size: 330% 110%;
+    }
+    .hero__seg:nth-child(1) { background-position: 0% 50%; }
+    .hero__seg:nth-child(2) { background-position: 50% 50%; }
+    .hero__seg:nth-child(3) { background-position: 100% 50%; }
+
+    /* Dim all on container hover, brighten the active one */
+    .hero__segments:hover .hero__seg {
+      filter: brightness(0.45);
+    }
+    .hero__segments:hover .hero__seg:hover {
+      filter: brightness(1.15);
+    }
+
+    /* Word overlay */
+    .hero__seg-word {
+      opacity: 0;
+      color: #fff;
+      font-family: var(--serif);
+      font-size: 2.25rem;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-shadow: 0 2px 24px rgba(0,0,0,0.6);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      transform: translateY(6px);
+      pointer-events: none;
+      position: relative;
+      z-index: 2;
+    }
+    .hero__seg:hover .hero__seg-word {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    /* Centered brand mark on image */
+    .hero__img-mark {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+    .hero__img-mark svg { width: 72px; opacity: 0.92; }
+
+    /* ═══════════════════════════════════════
+       4. LOGOS STRIP
+       "Backed by angels from"
+       serif 24px weight 400 color rgba(0,0,0,0.7)
+       Logos: sans bold, muted rgba(0,0,0,0.35)
+       Sub: sans 14px weight 500 rgba(0,0,0,0.6)
+    ═══════════════════════════════════════ */
+    .logos {
+      padding: var(--sp16) 0 var(--sp14);
+      text-align: center;
+    }
+    .logos__label {
+      font-family: var(--serif);
+      font-size: 24px;               /* exact: text-2xl = 24px (1.5rem) */
+      font-weight: 400;
+      color: rgba(0,0,0,0.7);        /* exact */
+      margin-bottom: var(--sp8);
+    }
+    .logos__row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: var(--sp6) var(--sp12);
+      margin-bottom: var(--sp4);
+    }
+    .logos__item {
+      font-family: var(--sans);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--ink);
+      opacity: 0.35;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 0.4em;
+    }
+    .logos__sub {
+      font-family: var(--sans);
+      font-size: 14px;               /* exact: text-sm = 14px */
+      font-weight: 500;              /* exact: font-medium */
+      line-height: 19.6px;           /* exact: leading-[1.4] */
+      color: rgba(0,0,0,0.6);        /* exact: text-ink/60 */
+      margin-top: var(--sp10);
+    }
+
+    .rule { border: none; border-top: 1px solid rgba(0,0,0,0.1); }
+
+    /* ═══════════════════════════════════════
+       5. EDITORIAL SECTION
+       H2: serif 38px weight 400 lh 1.1 ls -0.01em color rgba(0,0,0,0.8)
+       Body: sans 18px weight 500 lh 1.45 color rgba(0,0,0,0.6)
+    ═══════════════════════════════════════ */
+    .editorial {
+      padding: var(--sp20) 0;
+    }
+    .editorial__inner {
+      width: min(calc(100% - 2rem), 688px);
+      margin-left: clamp(1rem, 22vw, 340px);
+    }
+    .editorial__label {
+      font-family: var(--sans);
+      font-size: 18px;
+      font-weight: 500;
+      color: rgba(0,0,0,0.4);
+      letter-spacing: 0.01em;
+      margin-bottom: var(--sp4);
+    }
+    .editorial__h2 {
+      font-family: var(--serif);
+      font-size: 23px;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: rgba(0,0,0,0.8);
+      margin-bottom: var(--sp8);
+    }
+    /* Roadmap timeline */
+    .editorial__body {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      padding-left: 24px;
+    }
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .editorial__item {
+      position: relative;
+      padding-bottom: 32px;
+      transition: none;
+    }
+    .editorial__item.pre-reveal {
+      opacity: 0;
+    }
+    .editorial__item.is-visible {
+      animation: fadeSlideUp 0.4s ease forwards;
+    }
+    .editorial__item.is-visible:nth-child(1) { animation-delay: 0s; }
+    .editorial__item.is-visible:nth-child(2) { animation-delay: 0.15s; }
+    .editorial__item.is-visible:nth-child(3) { animation-delay: 0.3s; }
+    .editorial__item.is-visible:nth-child(4) { animation-delay: 0.45s; }
+    .editorial__item.is-visible:nth-child(5) { animation-delay: 0.6s; }
+    .editorial__item:last-child {
+      padding-bottom: 0;
+    }
+    /* Bullet: light grey inner + bigger light grey outer ring */
+    .editorial__item::after {
+      content: '';
+      position: absolute;
+      left: -20px;
+      top: 3px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #a0a09a;
+      border: 3.5px solid #ddddd8;
+      box-sizing: border-box;
+    }
+    .editorial__num {
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(0,0,0,0.4);
+      letter-spacing: 0.01em;
+      text-transform: none;
+      margin-bottom: 10px !important;
+    }
+    .editorial__body p {
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.55;
+      color: rgba(0,0,0,0.6);
+      margin: 0;
+    }
+
+    /* ═══════════════════════════════════════
+       6. PRODUCTS GRID
+       Card title: sans 16px weight 500 color #000
+       Card desc: sans 14px weight 500 color rgba(0,0,0,0.6)
+    ═══════════════════════════════════════ */
+    .products {
+      padding: var(--sp8) 0 var(--sp20);
+    }
+    .products__hd {
+      margin-bottom: var(--sp12);
+    }
+    .products__label {
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0;
+      color: rgba(0,0,0,0.55);
+      margin-bottom: var(--sp3);
+    }
+    .products__title {
+      font-family: var(--serif);
+      font-size: 34px;               /* text-[2.125rem] = 34px */
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+    .products__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp10) var(--sp16);
+      padding-top: var(--sp8);
+      border-top: 1px solid rgba(0,0,0,0.1);
+    }
+    .pcard { display: flex; gap: var(--sp4); align-items: flex-start; }
+    .pcard__icon {
+      width: 46px;
+      height: 46px;
+      flex-shrink: 0;
+      background: rgba(0,0,0,0.06);
+      border-radius: var(--r-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: rgba(0,0,0,0.5);
+      /* Hatching texture like AfterQuery's stamp icons */
+      background-image:
+        repeating-linear-gradient(45deg, rgba(0,0,0,0.07) 0, rgba(0,0,0,0.07) 1px, transparent 1px, transparent 5px),
+        repeating-linear-gradient(-45deg, rgba(0,0,0,0.04) 0, rgba(0,0,0,0.04) 1px, transparent 1px, transparent 5px);
+    }
+    .pcard__body { flex: 1; }
+    .pcard__name {
+      font-family: var(--sans);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: var(--sp2);
+      line-height: 1.35;
+    }
+    .pcard__desc {
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.55;
+      color: rgba(0,0,0,0.6);
+    }
+
+    /* Experience cards — logo header (image only, no name text) + role + description */
+    .exp-card {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp3);
+    }
+    .exp-card__logo {
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      margin-bottom: var(--sp2);
+    }
+    .exp-card__logo img {
+      max-height: 100%;
+      max-width: 170px;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+    }
+    .exp-card__company {
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(0,0,0,0.45);
+      letter-spacing: 0.01em;
+      margin-bottom: 2px;
+    }
+    .exp-card__role {
+      font-family: var(--sans);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.35;
+    }
+    .exp-card__desc {
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.6;
+      color: rgba(0,0,0,0.6);
+    }
+    @media (max-width: 640px) {
+      .products__grid.exp-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Editorial item 05 — nested real-world-experience block (logo, role, desc, 2x2 grid) */
+    .editorial__logo {
+      margin: 4px 0 var(--sp4);
+    }
+    .editorial__logo img {
+      height: 38px;
+      width: auto;
+      max-width: 200px;
+      object-fit: contain;
+      display: block;
+    }
+    .editorial__company {
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(0,0,0,0.45);
+      letter-spacing: 0.01em;
+      margin: 0 0 2px !important;
+    }
+    .editorial__role {
+      font-family: var(--sans);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.35;
+      margin-bottom: var(--sp2) !important;
+    }
+    .editorial__data-label {
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      margin: var(--sp6) 0 var(--sp4) !important;
+    }
+    .editorial__exp-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp5) var(--sp6);
+      margin-top: var(--sp5);
+    }
+    .editorial__exp-grid .exp-card {
+      gap: 0;
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 10px;
+      padding: var(--sp6) var(--sp5) var(--sp5);
+      transition: border-color 0.3s ease, background-color 0.3s ease;
+    }
+    .editorial__exp-grid .exp-card:hover {
+      border-color: rgba(0,0,0,0.2);
+      background-color: rgba(0,0,0,0.015);
+    }
+    .editorial__exp-grid .exp-card__logo {
+      height: 64px;
+      width: 100%;
+      margin-bottom: var(--sp4);
+      padding-bottom: var(--sp4);
+      border-bottom: 1px solid rgba(0,0,0,0.07);
+      display: flex;
+      align-items: center;
+    }
+    .editorial__exp-grid .exp-card__logo img {
+      height: 40px;
+      width: auto;
+      max-width: 200px;
+      object-fit: contain;
+      filter: grayscale(0.1);
+    }
+    .editorial__exp-grid .exp-card__role { margin-bottom: var(--sp2) !important; }
+    .editorial__exp-grid .exp-card__company {
+      font-size: 11px;
+    }
+    .editorial__exp-grid .exp-card__role {
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+    .editorial__exp-grid .exp-card__desc {
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    @media (max-width: 640px) {
+      .editorial__exp-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ═══════════════════════════════════════
+       7. SECTION ROW  (Research, etc.)
+       Heading: sans 24px weight 500 color #000
+       Body: sans 14px weight 500 color rgba(0,0,0,0.6)
+       "More research" link-button: same pill ghost style
+    ═══════════════════════════════════════ */
+    .sec-row {
+      padding: var(--sp14) 0;
+      border-top: 1px solid rgba(0,0,0,0.1);
+    }
+    .sec-row__top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--sp4);
+      margin-bottom: var(--sp6);
+    }
+    .sec-row__h {
+      font-family: var(--sans);      /* exact: research heading uses sans */
+      font-size: 24px;               /* exact: text-2xl */
+      font-weight: 500;              /* exact: font-medium */
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+    .sec-row__desc {
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.55;
+      color: rgba(0,0,0,0.6);
+      max-width: 60ch;
+    }
+
+    /* ═══════════════════════════════════════
+       8. BLOG CARDS
+       Title: serif 20px weight 400 lh 1.15 ls -0.01em color #000
+       Excerpt: sans 14px weight 500 lh 1.55 color rgba(0,0,0,0.55)
+       Tag: sans 14px weight 500
+    ═══════════════════════════════════════ */
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp8);
+    }
+    .bcard { display: flex; flex-direction: column; gap: var(--sp3); }
+    .bcard__img {
+      width: 100%;
+      aspect-ratio: 3 / 2;
+      object-fit: cover;
+      margin-bottom: var(--sp2);
+      border-radius: var(--r-sm);
+    }
+    .bcard__title {
+      font-family: var(--serif);
+      font-size: 20px;               /* exact: text-xl = 20px */
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.01em;       /* exact */
+      color: var(--ink);
+    }
+    .bcard__body {
+      font-family: var(--sans);
+      font-size: 14px;               /* exact: text-sm */
+      font-weight: 500;
+      line-height: 1.55;
+      color: rgba(0,0,0,0.55);
+    }
+    .bcard__meta {
+      display: flex;
+      align-items: center;
+      gap: var(--sp2);
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(0,0,0,0.45);
+      margin-top: auto;
+    }
+    .bcard__tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4em;
+      color: var(--ink);
+      font-weight: 500;
+    }
+    .bcard__tag::before {
+      content: '';
+      display: inline-block;
+      width: 7px; height: 7px;
+      background: var(--ink);
+    }
+
+    /* ═══════════════════════════════════════
+       9. CAREERS BANNER
+       Title: serif 24px weight 400 color #fff
+       Body: sans 14px weight 500 color rgba(255,255,255,0.7)
+       Link: sans 14px weight 500 color #fff (underline arrow)
+    ═══════════════════════════════════════ */
+    .careers {
+      background: var(--careers-bg);
+      position: relative;
+      overflow: hidden;
+      margin: var(--sp8) 0;
+    }
+    /* subtle noise overlay */
+    .careers::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+      background-size: 200px;
+      pointer-events: none;
+      opacity: 0.5;
+    }
+    .careers__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--sp8);
+      padding: var(--sp12) 0;
+      position: relative;
+      z-index: 1;
+    }
+    .careers__h {
+      font-family: var(--serif);
+      font-size: 24px;               /* exact: text-2xl */
+      font-weight: 400;
+      color: #fff;
+      margin-bottom: var(--sp3);
+      line-height: 1.15;
+    }
+    .careers__p {
+      font-family: var(--sans);
+      font-size: 14px;               /* exact: text-sm */
+      font-weight: 500;
+      line-height: 1.55;
+      color: rgba(255,255,255,0.7);  /* exact */
+      max-width: 52ch;
+    }
+    .careers__link {
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 500;
+      color: #fff;
+      white-space: nowrap;
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3em;
+    }
+    .careers__link::after { content: '↗'; }
+    .careers__link:hover { opacity: 0.8; }
+
+    /* ═══════════════════════════════════════
+       10. FOOTER
+       Col titles: sans 14px weight 500 rgba(0,0,0,0.9) ls -0.14px
+       Links: sans 14px weight 400 rgba(0,0,0,0.55)
+       Copyright: sans small rgba(0,0,0,0.38)
+    ═══════════════════════════════════════ */
+    .footer {
+      background: #000;
+      padding: 28px 0 24px;
+    }
+    .footer__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .footer__left { display: flex; flex-direction: column; gap: 5px; }
+    .footer__name {
+      font: 600 15px/1 var(--sans);
+      color: #fff;
+      letter-spacing: -0.01em;
+    }
+    .footer__tagline {
+      font: 400 12.5px/1.4 var(--sans);
+      color: rgba(255,255,255,0.45);
+    }
+    .footer__right {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+    .footer__social {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .footer__social a {
+      color: rgba(255,255,255,0.5);
+      transition: color 0.15s;
+      display: flex;
+      align-items: center;
+    }
+    .footer__social a:hover { color: rgba(255,255,255,0.9); }
+    .footer__social svg { width: 18px; height: 18px; }
+    .footer__copy {
+      font: 400 12px/1 var(--sans);
+      color: rgba(255,255,255,0.22);
+      white-space: nowrap;
+    }
+    @media (max-width: 600px) {
+      .footer__inner { flex-direction: column; align-items: flex-start; gap: 18px; }
+      .footer__right { flex-direction: column; align-items: flex-start; gap: 14px; }
+    }
+    .footer-bar {
+      background: #000;
+      padding: 0 0 20px;
+    }
+    .footer-bar__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 clamp(1rem, 5vw, 4rem);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .footer-bar__links {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .footer-bar__links a {
+      font: 400 12px/1 var(--sans);
+      color: rgba(255,255,255,0.35);
+      transition: color 0.15s;
+    }
+    .footer-bar__links a:hover { color: rgba(255,255,255,0.7); }
+    .footer-bar__sep {
+      font: 400 12px/1 var(--sans);
+      color: rgba(255,255,255,0.2);
+    }
+    .footer-bar__copy {
+      font: 400 12px/1 var(--sans);
+      color: rgba(255,255,255,0.35);
+      white-space: nowrap;
+    }
+
+    /* ═══════════════════════════════════════
+       BLINKING CURSOR  (exact: AfterQuery "aq-caret")
+       animation: 1.15s step-end infinite
+       color: rgba(0,0,0,0.4)  [text-ink/40]
+       width: 0 + overflow: visible  (takes no layout space)
+    ═══════════════════════════════════════ */
+
+
+    @keyframes aq-caret {
+      0%   { opacity: 1; }
+      50%  { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    .caret-blink {
+      display: inline-block;
+      width: 0;               /* exact: w-0 */
+      overflow: visible;      /* exact: overflow-visible */
+      color: rgba(0,0,0,0.4); /* exact: text-ink/40 */
+      animation: aq-caret 1.15s step-end infinite; /* exact timing */
+      vertical-align: baseline;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* ═══════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .nav__links { display: none; }
+      /* On mobile, allow heading to wrap (remove white-space: nowrap) */
+      .hero__h1 { white-space: normal; font-size: 26px; }
+      .hero__top { width: calc(100% - 2rem); margin-left: 1rem; }
+      .editorial__grid { grid-template-columns: 1fr; }
+      .editorial__h2 { grid-column: 1; font-size: 24px; }
+      .products__grid { grid-template-columns: 1fr; }
+      .blog-grid { grid-template-columns: 1fr 1fr; }
+      .footer__cols { grid-template-columns: repeat(2, 1fr); }
+      .footer__inner { flex-direction: column; }
+      .careers__inner { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 520px) {
+      .hero__h1 { font-size: 22px; }
+      .blog-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ══════════════════════════════════════
+       RESEARCH PAGE  ── pixel-exact AfterQuery measurements
+       viewport 1280px: inner wrapper = 1040px centered (left 112px)
+    ══════════════════════════════════════ */
+    #pg-research { min-height: 70vh; }
+
+    /* ── Contact page ── */
+    #pg-contact { background: var(--bg); }
+    .contact-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; padding: 80px 80px 100px; align-items: start; }
+    .contact-h1 { font: 400 46px/1.08 var(--serif); color: var(--ink); margin-bottom: 52px; }
+    .contact-sub { font: 400 15px/1.65 var(--sans); color: rgba(0,0,0,.5); margin-bottom: 32px; }
+    /* Form fields */
+    .cf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 28px; }
+    .cf-field { display: flex; flex-direction: column; gap: 7px; }
+    .cf-field label { font: 500 11.5px/1 var(--sans); color: rgba(0,0,0,.42); letter-spacing: .03em; }
+    .cf-field input, .cf-field textarea { border: none; border-bottom: 1px solid rgba(0,0,0,.18); background: transparent; font: 400 14px/1.5 var(--sans); color: var(--ink); padding: 8px 0 10px; outline: none; width: 100%; transition: border-color .2s; }
+    .cf-field input::placeholder, .cf-field textarea::placeholder { color: rgba(0,0,0,.3); }
+    .cf-field input:focus, .cf-field textarea:focus { border-bottom-color: var(--ink); }
+    .cf-field textarea { resize: none; min-height: 80px; }
+    .cf-field-full { margin-bottom: 28px; }
+    .cf-check-label { font: 600 13px/1 var(--sans); color: var(--ink); margin-bottom: 14px; }
+    .cf-checks { display: flex; flex-direction: column; gap: 14px; margin-bottom: 32px; }
+    .cf-check { display: flex; align-items: center; gap: 10px; font: 400 14px/1 var(--sans); color: rgba(0,0,0,.65); cursor: pointer; }
+    .cf-check input[type=checkbox] { width: 15px; height: 15px; accent-color: var(--ink); cursor: pointer; flex-shrink: 0; }
+    .cf-submit { background: rgba(0,0,0,.07); border: none; border-radius: 100px; font: 500 14px/1 var(--sans); color: var(--ink); padding: 16px 0; cursor: pointer; width: 100%; margin-top: 32px; transition: background .2s; }
+    .cf-submit:hover { background: rgba(0,0,0,.13); }
+    .cf-success { display: none; margin-top: 16px; font: 400 14px/1.5 var(--sans); color: rgba(0,0,0,.5); text-align: center; }
+    /* Dark card (right side) */
+    .contact-dark-card { position: relative; border-radius: 10px; overflow: hidden; padding: 48px 48px 52px; display: flex; flex-direction: column; gap: 28px; }
+    .contact-dark-card::before { content: ''; position: absolute; inset: 0; background-image: url('abstract.png'); background-size: cover; background-position: center; filter: brightness(0.32) saturate(1.2); z-index: 0; }
+    .contact-dark-card > * { position: relative; z-index: 1; }
+    .cd-block { display: flex; flex-direction: column; gap: 6px; }
+    .cd-label { font: 600 13px/1 var(--sans); color: rgba(255,255,255,.92); }
+    .cd-value { font: 400 14px/1.55 var(--sans); color: rgba(255,255,255,.52); }
+    .cd-value a { color: rgba(255,255,255,.52); text-decoration: none; transition: color .2s; }
+    .cd-value a:hover { color: rgba(255,255,255,.88); }
+    .cd-disclaimer { font: 400 13px/1.6 var(--sans); color: rgba(255,255,255,.45); font-style: italic; }
+    .cd-social { display: flex; gap: 20px; margin-top: 4px; }
+    .cd-social a { font: 500 14px/1 var(--sans); color: rgba(255,255,255,.55); text-decoration: none; transition: color .2s; }
+    .cd-social a:hover { color: #fff; }
+    @media (max-width: 768px) {
+      .contact-wrap { grid-template-columns: 1fr; gap: 48px; padding: 48px 24px; }
+      .cf-row { grid-template-columns: 1fr; }
+    }
+    /* Shared inner wrapper — matches AfterQuery's w-[min(100%-2rem,1040px)] */
+    .rp-wrap { width: min(100% - 2rem, 1040px); margin: 0 auto; }
+    /* Hero header — padding: 112px 0 64px, text-center */
+    .rp-hero { text-align: center; padding: 56px 0 36px; }
+    .rp-hero__eyebrow { font: 400 12px/1 var(--sans); letter-spacing: .08em; text-transform: uppercase; color: rgba(0,0,0,.38); margin-bottom: 20px; }
+    .rp-hero__h1 { font: 400 38px/1.05 var(--serif); color: var(--ink); margin-bottom: 20px; }
+    .rp-hero__desc { font: 400 18px/1.6 var(--sans); color: rgba(0,0,0,.6); max-width: 640px; margin: 0 auto; }
+    /* Feature cards section */
+    .rp-feat { padding-bottom: 32px; }
+    .rp-feat__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .rp-feat__grid--3 { grid-template-columns: repeat(3, 1fr); }
+    @media (max-width: 768px) {
+      .rp-feat__grid--3 { grid-template-columns: 1fr; }
+    }
+    .rp-feat-card.is-active { box-shadow: 0 0 0 2px rgba(255,255,255,.35) inset; }
+    #pg-experience .rp-feat-card { min-height: 80px; padding: 28px; display: flex; align-items: center; justify-content: center; text-align: center; transition: opacity .3s ease, filter .3s ease; }
+    #pg-experience .rp-feat-card__name { margin-bottom: 0; }
+    #pg-experience .rp-feat__grid--3:has(.rp-feat-card.is-active) .rp-feat-card:not(.is-active) {
+      opacity: .8; filter: saturate(.9) brightness(.96);
+    }
+    .exp-detail {
+      margin-top: 20px;
+      border-radius: 10px;
+    }
+    .exp-detail:has(.exp-detail__role) {
+      border: 1px solid rgba(0,0,0,.08);
+      padding: 32px 28px;
+      background: rgba(0,0,0,.015);
+    }
+    .exp-detail__role { font: 600 16px/1.35 var(--sans); color: var(--ink); margin-bottom: 10px; }
+    .exp-detail__desc { font: 400 14px/1.6 var(--sans); color: rgba(0,0,0,.6); }
+
+    /* ── Experience journey timeline ── */
+    .jrn { position: relative; padding: 12px 0 8px; }
+    .jrn-item {
+      position: relative; display: flex; align-items: stretch; gap: 36px;
+      padding: 56px 0 56px 32px;
+      opacity: 0.25; transform: scale(0.97);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .jrn-item.is-active { opacity: 1; transform: scale(1); }
+    .jrn-item.is-active .jrn-dot { transform: translateY(-50%) scale(1.5); box-shadow: 0 0 0 4px rgba(0,0,0,0.08); }
+    .jrn-item:nth-child(even) { flex-direction: row-reverse; }
+    .jrn-rail { position: absolute; left: 9px; top: 0; bottom: 0; width: 2px; background: rgba(0,0,0,.1); z-index: 0; }
+    .jrn-item:first-child .jrn-rail { top: 32px; }
+    .jrn-item:last-child .jrn-rail { bottom: 32px; }
+    .jrn-dot {
+      position: absolute; left: 4px; top: 50%; transform: translateY(-50%);
+      width: 12px; height: 12px; border-radius: 50%; background: var(--ink);
+      border: 3px solid var(--bg); z-index: 2;
+    }
+    .jrn-media {
+      position: relative; flex: 0 0 220px; width: 220px; min-height: 220px; border-radius: 14px;
+      border: 1px solid rgba(0,0,0,.08); background: #fff; overflow: hidden;
+      display: flex; align-items: center; justify-content: center; padding: 22px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.04);
+    }
+    .jrn-media img { max-width: 100%; max-height: 100%; object-fit: contain; }
+    .jrn-media.has-photo { padding: 0; }
+    .jrn-media.has-photo .jrn-photo { width: 100%; height: 100%; max-width: 100%; max-height: 100%; object-fit: cover; }
+    .jrn-badge {
+      position: absolute; left: -10px; bottom: -10px; width: 46px; height: 46px;
+      border-radius: 50%; background: #fff; border: 3px solid var(--bg);
+      display: flex; align-items: center; justify-content: center; padding: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,.14); z-index: 3;
+    }
+    .jrn-badge img { width: 100%; height: 100%; object-fit: contain; }
+    .jrn-content { flex: 1; min-width: 0; }
+    .jrn-company { font: 400 23px/1.2 var(--serif); color: var(--ink); margin-bottom: 8px; }
+    .jrn-role { font: 600 14px/1.4 var(--sans); color: rgba(0,0,0,.7); margin-bottom: 6px; }
+    .jrn-dates { font: 500 11px/1 var(--sans); letter-spacing: .05em; text-transform: uppercase; color: rgba(0,0,0,.38); margin-bottom: 16px; }
+    .jrn-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+    .jrn-tag { font: 500 11px/1 var(--sans); color: rgba(0,0,0,.6); background: rgba(0,0,0,.06); border-radius: var(--r-full); padding: 5px 10px; }
+    .jrn-intro { font: 400 14px/1.65 var(--sans); color: rgba(0,0,0,.6); margin-bottom: 18px; }
+    .jrn-tabs { display: flex; gap: 22px; border-bottom: 1px solid rgba(0,0,0,.1); margin-bottom: 16px; }
+    .jrn-tab {
+      font: 500 13px/1 var(--sans); color: rgba(0,0,0,.38); background: none; border: none;
+      padding: 0 0 11px; cursor: pointer; position: relative; transition: color .2s;
+    }
+    .jrn-tab:hover { color: rgba(0,0,0,.65); }
+    .jrn-tab.is-active { color: var(--ink); }
+    .jrn-tab.is-active::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--ink); }
+    .jrn-panel { font: 400 14px/1.7 var(--sans); color: rgba(0,0,0,.65); transition: opacity .18s ease; }
+    .jrn-panel p { margin-bottom: 12px; }
+    .jrn-panel ul { margin: 0 0 12px 0; padding: 0; }
+    .jrn-panel li { position: relative; margin-bottom: 8px; padding-left: 17px; }
+    .jrn-panel li::before { content: ''; position: absolute; left: 0; top: 8px; width: 6px; height: 6px; border-radius: 50%; background: rgba(0,0,0,.32); }
+    .jrn-subhead { font: 600 12px/1 var(--sans); color: var(--ink); text-transform: uppercase; letter-spacing: .05em; margin: 18px 0 8px; }
+    .jrn-subhead:first-child { margin-top: 0; }
+    @media (max-width: 768px) {
+      .jrn-item, .jrn-item:nth-child(even) { flex-direction: column; gap: 18px; padding-left: 24px; }
+      .jrn-rail { left: 5px; }
+      .jrn-dot { left: 0; width: 10px; height: 10px; }
+      .jrn-media { width: 100%; min-height: 0; height: 200px; flex-basis: auto; padding: 14px; }
+      .jrn-media.has-photo { padding: 0; }
+      .jrn-badge { width: 34px; height: 34px; padding: 5px; left: -6px; bottom: -6px; }
+      .jrn-content { max-width: none; }
+    }
+
+    /* ── Self Initiatives — zoom + flip cards ── */
+    .init-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; padding: 4px 0 8px; }
+    .init-card { perspective: 1600px; height: 408px; }
+    .init-card-inner {
+      position: relative; width: 100%; height: 100%; cursor: pointer;
+      transition: transform .65s cubic-bezier(.22,.85,.32,1);
+      transform-style: preserve-3d;
+    }
+    .init-card:hover .init-card-inner { transform: translateY(-6px) scale(1.035) rotateY(180deg); }
+    .init-face {
+      position: absolute; inset: 0; border-radius: 16px; padding: 30px 28px;
+      backface-visibility: hidden; -webkit-backface-visibility: hidden;
+      display: flex; flex-direction: column;
+    }
+    .init-face--front {
+      color: #fff; justify-content: space-between; overflow: hidden;
+      box-shadow: 0 16px 36px rgba(0,0,0,.22); transition: box-shadow .3s ease;
+    }
+    .init-card:hover .init-face--front { box-shadow: 0 22px 44px rgba(0,0,0,.28); }
+    .init-face--back {
+      background: #fff; border: 1px solid rgba(0,0,0,.08); color: var(--ink);
+      transform: rotateY(180deg); justify-content: flex-start;
+      box-shadow: 0 1px 3px rgba(0,0,0,.04);
+    }
+    .init-accent { width: 30px; height: 4px; border-radius: 2px; margin-bottom: 20px; background: rgba(255,255,255,.7); }
+    .init-eyebrow { font: 500 11px/1 var(--sans); letter-spacing: .06em; text-transform: uppercase; color: rgba(255,255,255,.6); margin-bottom: 10px; }
+    .init-title { font: 400 24px/1.18 var(--serif); color: #fff; margin-bottom: 12px; }
+    .init-desc { font: 400 14px/1.65 var(--sans); color: rgba(255,255,255,.78); }
+    .init-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+    .init-tag { font: 500 11px/1 var(--sans); color: rgba(255,255,255,.9); background: rgba(255,255,255,.16); border-radius: var(--r-full); padding: 5px 10px; }
+    .init-tag--dark { color: rgba(0,0,0,.65); background: rgba(0,0,0,.07); }
+    .init-hint {
+      font: 500 11px/1 var(--sans); letter-spacing: .04em; text-transform: uppercase;
+      color: rgba(255,255,255,.5); display: flex; align-items: center; gap: 5px; align-self: flex-end;
+    }
+    .init-back-eyebrow { font: 500 11px/1 var(--sans); letter-spacing: .06em; text-transform: uppercase; color: rgba(0,0,0,.4); margin-bottom: 8px; }
+    .init-back-title { font: 400 19px/1.25 var(--serif); color: var(--ink); margin-bottom: 20px; }
+    .init-back-list { display: flex; flex-direction: column; gap: 14px; }
+    .init-back-item { position: relative; padding-left: 16px; font: 400 13.5px/1.55 var(--sans); color: rgba(0,0,0,.68); }
+    .init-back-item::before { content: ''; position: absolute; left: 0; top: 6px; width: 6px; height: 6px; border-radius: 50%; background: rgba(0,0,0,.32); }
+    .init-face--front::before {
+      content: '';
+      position: absolute; inset: -45%;
+      background-image:
+        radial-gradient(ellipse 90% 70% at 6% 10%, rgba(255,255,255,.65), transparent 52%),
+        radial-gradient(ellipse 70% 60% at 92% 88%, rgba(255,255,255,.2), transparent 55%),
+        repeating-linear-gradient(112deg,
+          transparent 0px, transparent 10px,
+          rgba(255,255,255,.55) 10px, rgba(255,255,255,.55) 12px,
+          transparent 12px, transparent 30px,
+          rgba(255,255,255,.32) 30px, rgba(255,255,255,.32) 33px,
+          transparent 33px, transparent 54px,
+          rgba(255,255,255,.42) 54px, rgba(255,255,255,.42) 56px,
+          transparent 56px, transparent 80px);
+      filter: blur(13px);
+      mix-blend-mode: screen;
+      opacity: .85;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .init-face--front > * { position: relative; z-index: 1; }
+    @media (max-width: 900px) {
+      .init-grid { grid-template-columns: 1fr; }
+      .init-card { height: 360px; }
+    }
+    /* ── Achievements — afterquery-style row list ── */
+    .ach-title { font: 400 38px/1.1 var(--serif); letter-spacing: -0.01em; color: var(--ink); margin-bottom: 22px; }
+    .ach-intro { font: 400 14px/1.65 var(--sans); color: rgba(0,0,0,.65); max-width: none; margin-bottom: 14px; }
+    .ach-intro:last-of-type { margin-bottom: 0; }
+    @media (max-width: 768px) {
+      .ach-title { font-size: 30px; }
+    }
+    .ach-table-section { margin-top: 48px; }
+    .ach-table-section:first-of-type { margin-top: 40px; }
+    .ach-table-label { font: 500 11px/1 var(--sans); letter-spacing: .1em; text-transform: uppercase; color: rgba(0,0,0,.38); margin-bottom: 6px; }
+    .ach-entries { border-top: 1px solid rgba(0,0,0,.1); }
+    .ach-entry {
+      display: grid; grid-template-columns: minmax(220px, 38%) 1fr; gap: 40px;
+      align-items: start; padding: 26px 6px; border-bottom: 1px solid rgba(0,0,0,.08);
+      border-radius: 6px; transition: background .2s ease;
+    }
+    .ach-entry:hover { background: rgba(0,0,0,.018); }
+    .ach-entry:last-child { border-bottom: none; }
+    .ach-mark-row { display: flex; align-items: center; gap: 14px; }
+    .ach-mark { width: 4px; height: 18px; border-radius: 2px; flex-shrink: 0; }
+    .ach-entry__title { font: 500 17px/1.35 var(--serif); color: var(--ink); display: block; }
+    .ach-entry__sub { font: 400 12.5px/1.4 var(--sans); color: rgba(0,0,0,.42); margin-top: 4px; display: block; }
+    .ach-entry__desc { font: 400 13.5px/1.65 var(--sans); color: rgba(0,0,0,.64); padding-top: 2px; }
+    @media (max-width: 768px) {
+      .ach-table-section { margin-top: 34px; }
+      .ach-entry { grid-template-columns: 1fr; gap: 10px; padding: 20px 4px; }
+    }
+
+    @media (max-width: 600px) {
+      .init-card { perspective: none; height: auto; }
+      .init-card-inner { transition: none; display: flex; flex-direction: column; gap: 16px; height: auto; }
+      .init-card:hover .init-card-inner { transform: none; }
+      .init-face { position: relative; inset: auto; backface-visibility: visible; }
+      .init-face--back { transform: none; }
+    }
+
+    /* ── Self Initiatives — additional initiatives table ── */
+    .init-table-section { margin-top: 44px; }
+    .init-table-label { font: 500 11px/1 var(--sans); letter-spacing: .08em; text-transform: uppercase; color: rgba(0,0,0,.4); margin-bottom: 14px; }
+    .init-table-wrap { overflow-x: auto; border: 1px solid rgba(0,0,0,.1); border-radius: 10px; }
+    .init-table { width: 100%; min-width: 760px; border-collapse: collapse; }
+    .init-table th, .init-table td { padding: 15px 20px; text-align: left; vertical-align: top; border-bottom: 1px solid rgba(0,0,0,.08); }
+    .init-table th {
+      font: 600 11.5px/1 var(--sans); letter-spacing: .04em; text-transform: uppercase;
+      color: rgba(0,0,0,.45); background: rgba(0,0,0,.025); white-space: nowrap;
+    }
+    .init-table td { font: 400 13.5px/1.55 var(--sans); color: rgba(0,0,0,.68); }
+    .init-table td:first-child { font: 500 14px/1.4 var(--serif); color: var(--ink); }
+    .init-table tbody tr:last-child td { border-bottom: none; }
+    .init-table tbody tr:hover { background: rgba(0,0,0,.015); }
+    @media (max-width: 768px) {
+      .init-table-section { margin-top: 32px; }
+    }
+    .rp-feat-card { position: relative; overflow: hidden; border-radius: 8px; padding: 24px 28px 20px; min-height: 148px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; cursor: pointer; }
+    .rp-feat-card__eyebrow { font: 500 11px/1 var(--sans); color: rgba(255,255,255,.4); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 10px; }
+    .rp-feat-card__name { font: 400 19px/1.2 var(--serif); color: #fff; margin-bottom: 8px; text-align: left; }
+    .rp-feat-card__sub { font: 400 13px/1.55 var(--sans); color: rgba(255,255,255,.5); max-width: 300px; }
+    .rp-feat-card__cta { font: 500 13px/1 var(--sans); color: rgba(255,255,255,.65); margin-top: 20px; }
+
+    /* ── Abstract texture overlay (AfterQuery-style streak + grain) ── */
+    .init-face--back { overflow: hidden; }
+    .rp-feat-card::before, .init-face--back::before {
+      content: '';
+      position: absolute; inset: -45%;
+      background-image:
+        radial-gradient(ellipse 90% 70% at 6% 10%, rgba(255,255,255,.65), transparent 52%),
+        radial-gradient(ellipse 70% 60% at 92% 88%, rgba(255,255,255,.2), transparent 55%),
+        repeating-linear-gradient(112deg,
+          transparent 0px, transparent 10px,
+          rgba(255,255,255,.55) 10px, rgba(255,255,255,.55) 12px,
+          transparent 12px, transparent 30px,
+          rgba(255,255,255,.32) 30px, rgba(255,255,255,.32) 33px,
+          transparent 33px, transparent 54px,
+          rgba(255,255,255,.42) 54px, rgba(255,255,255,.42) 56px,
+          transparent 56px, transparent 80px);
+      filter: blur(13px);
+      mix-blend-mode: screen;
+      opacity: .85;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .rp-feat-card > *, .init-face--back > * { position: relative; z-index: 1; }
+    /* Blog list section — padding-bottom: 112px */
+    .rp-list-outer { padding-bottom: 112px; }
+    .rp-list { border-top: 1px solid rgba(0,0,0,.1); }
+    /* AfterQuery list item grid: 88px thumbnail | 1fr title+meta | 76px CTA, gap 24px, padding 24px top/bottom */
+    .rp-item { display: grid; grid-template-columns: 88px 1fr 76px; column-gap: 24px; align-items: center; padding: 24px 0; border-bottom: 1px solid rgba(0,0,0,.08); cursor: pointer; }
+    .rp-item:hover .rp-item__title { opacity: .5; }
+    /* Thumbnail: 88×120px portrait (exact AfterQuery measurement) */
+    .rp-item__thumb { width: 88px; height: 120px; object-fit: cover; display: block; flex-shrink: 0; }
+    .rp-item__thumb-ph { width: 88px; height: 120px; flex-shrink: 0; }
+    /* Title: 20px serif */
+    .rp-item__title { font: 400 20px/1.15 var(--serif); color: var(--ink); margin-bottom: 12px; transition: opacity .2s; }
+    /* Meta row: avatar circles + names + · + date */
+    .rp-item__meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .rp-av-row { display: flex; }
+    .rp-av { width: 24px; height: 24px; border-radius: 50%; background: rgba(0,0,0,.13); border: 2px solid var(--bg); display: inline-flex; align-items: center; justify-content: center; font: 700 7px/1 var(--sans); color: rgba(0,0,0,.5); flex-shrink: 0; overflow: hidden; }
+    .rp-av img { width: 100%; height: 100%; object-fit: cover; }
+    .rp-av + .rp-av { margin-left: -5px; }
+    .rp-item__names { font: 400 14px/1 var(--sans); color: rgba(0,0,0,.6); }
+    .rp-item__sep { font: 400 14px/1 var(--sans); color: rgba(0,0,0,.28); }
+    .rp-item__date { font: 400 14px/1 var(--sans); color: rgba(0,0,0,.6); }
+    /* CTA: 14px, rgba(0,0,0,.8), right-aligned */
+    .rp-item__cta { font: 400 14px/1 var(--sans); color: rgba(0,0,0,.8); white-space: nowrap; text-align: right; }
+    .rp-empty { font: 400 14px/1.6 var(--sans); color: rgba(0,0,0,.38); padding: 40px 0; }
+    #docx-input { display: none; }
+
+    /* ══════════════════════════════════════
+       BLOG POST PAGE  ── pixel-exact AfterQuery measurements
+       Outer: article padding 64px 0 128px
+       Wrapper: max-width 1040px, centered (left 112px at 1280vw)
+       Hero: 1040×419px
+       H1: 38px serif, centered, max 760px
+       Content grid: 1fr  minmax(0,660px)  1fr
+       TOC: sticky top 112px, width ~158px within left 1fr col
+       Body text: 18px/26px serif rgba(0,0,0,0.8)
+    ══════════════════════════════════════ */
+    #pg-blog { min-height: 70vh; }
+    /* Shared 1040px wrapper */
+    .bp-wrap { width: min(100% - 2rem, 1040px); margin: 0 auto; }
+    /* Article outer padding */
+    .bp-article { padding: 64px 0 128px; }
+    /* Back button — left-aligned, 14px */
+    .bp-back { display: inline-block; font: 400 14px/1 var(--sans); color: rgba(0,0,0,.8); cursor: pointer; transition: opacity .2s; padding-bottom: 28px; }
+    .bp-back:hover { opacity: .5; }
+    /* Hero image — fills full 1040px, aspect ~1040:419 */
+    .bp-hero { width: 100%; aspect-ratio: 1040 / 419; object-fit: cover; display: block; }
+    .bp-hero-ph { width: 100%; aspect-ratio: 1040 / 419; }
+    /* Centered header block (eyebrow + H1 + authors) */
+    .bp-header { text-align: center; padding: 40px 0 32px; }
+    /* Eyebrow: ■ Blog · Jun 8 */
+    .bp-eyebrow { font: 400 13px/1 var(--sans); color: rgba(0,0,0,.5); margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .bp-eyebrow-dot { width: 7px; height: 7px; background: var(--ink); border-radius: 1px; flex-shrink: 0; }
+    /* H1: 38px serif centered, constrained to 760px */
+    .bp-h1 { font: 400 38px/1.05 var(--serif); color: var(--ink); margin: 0 auto 28px; max-width: 760px; }
+    /* Authors row: centered flex, gap 10px between each author */
+    .bp-authors { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 36px; }
+    .bp-author { display: flex; align-items: center; gap: 8px; }
+    .bp-av { width: 32px; height: 32px; border-radius: 50%; background: rgba(0,0,0,.12); display: inline-flex; align-items: center; justify-content: center; font: 700 10px/1 var(--sans); color: rgba(0,0,0,.5); border: 2px solid var(--bg); overflow: hidden; flex-shrink: 0; }
+    .bp-av img { width: 100%; height: 100%; object-fit: cover; }
+    .bp-author-name { font: 400 14px/1 var(--sans); color: rgba(0,0,0,.6); }
+    /* Horizontal rule — full 1040px width */
+    .bp-rule { border: none; border-top: 1px solid rgba(0,0,0,.1); margin: 0; }
+    /* THREE-COLUMN content grid: 1fr | minmax(0,660px) | 1fr  (matches AfterQuery exactly) */
+    .bp-content { display: grid; grid-template-columns: 1fr minmax(0, 660px) 1fr; margin-top: 56px; }
+    /* TOC lives in left 1fr column, sticky */
+    .bp-toc { position: sticky; top: 112px; align-self: flex-start; padding-right: 24px; }
+    .bp-toc__label { font: 500 11px/1 var(--sans); letter-spacing: .09em; text-transform: uppercase; color: rgba(0,0,0,.3); margin-bottom: 16px; }
+    .bp-toc ul { list-style: none; padding: 0; margin: 0; }
+    .bp-toc li + li { margin-top: 10px; }
+    .bp-toc a { font: 400 13px/1.45 var(--sans); color: rgba(0,0,0,.42); text-decoration: none; transition: color .15s; display: flex; align-items: flex-start; gap: 8px; }
+    .bp-toc a::before { content: ''; width: 3px; height: 14px; background: var(--ink); border-radius: 1px; flex-shrink: 0; margin-top: 2px; opacity: 0; transition: opacity .15s; }
+    .bp-toc a.active::before { opacity: 1; }
+    .bp-toc a:hover { color: var(--ink); }
+    .bp-toc a.active { color: var(--ink); font-weight: 600; }
+    /* Body — center column (660px max) */
+    .bp-body { min-width: 0; padding-bottom: 0; }
+    /* Body text: 18px serif rgba(0,0,0,0.8) — measured exactly from AfterQuery */
+    .bp-body p { font: 400 19px/1.5 var(--serif); color: rgba(0,0,0,.8); margin-bottom: 22px; }
+    /* H2 in body: 20px serif weight 700 */
+    .bp-body h2 { font: 700 20px/1.25 var(--serif); color: var(--ink); margin: 52px 0 16px; scroll-margin-top: 112px; }
+    .bp-body h3 { font: 600 19px/1.5 var(--serif); color: rgba(0,0,0,.85); margin: 36px 0 10px; scroll-margin-top: 112px; }
+    .bp-body h4 { font: 600 13px/1.3 var(--sans); color: rgba(0,0,0,.6); margin: 22px 0 8px; }
+    .bp-body img { max-width: 100%; height: auto; display: block; margin: 32px 0; }
+    .bp-body figure { margin: 36px 0; }
+    .bp-body figcaption { font: 400 13px/1.55 var(--sans); color: rgba(0,0,0,.38); text-align: center; margin-top: 10px; font-style: italic; }
+    .bp-body .img-ph { width: 100%; aspect-ratio: 16/7; background: #e4e2db; display: flex; align-items: center; justify-content: center; margin: 32px 0; }
+    .bp-body .img-ph span { font: 500 11px/1 var(--sans); color: rgba(0,0,0,.28); letter-spacing: .07em; text-transform: uppercase; }
+    .bp-body table { width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 16px; }
+    .bp-body th { font: 500 16px/1.3 var(--sans); color: var(--ink); padding: 0 0 12px; border-bottom: 1px solid rgba(0,0,0,.12); text-align: left; }
+    .bp-body th:first-child, .bp-body td:first-child { width: 32%; padding-right: 24px; }
+    .bp-body td { padding: 13px 0; border-bottom: 1px solid rgba(0,0,0,.08); color: rgba(0,0,0,.65); font: 400 16px/1.4 var(--sans); }
+    .bp-body td:first-child { color: rgba(0,0,0,.55); }
+    .bp-body table.rank-table th:first-child, .bp-body table.rank-table td:first-child { width: 8%; padding-right: 12px; }
+    .bp-body table.rank-table th:nth-child(2), .bp-body table.rank-table td:nth-child(2) { width: auto; }
+    .bp-body table.rank-table th:nth-child(3), .bp-body table.rank-table td:nth-child(3),
+    .bp-body table.rank-table th:nth-child(4), .bp-body table.rank-table td:nth-child(4) { text-align: right; }
+    .bp-body table.rank-table th:nth-child(4), .bp-body table.rank-table td:nth-child(4) { font-weight: 700; }
+    .bp-body table.rank-table tbody tr.rank-row { cursor: pointer; }
+    .bp-body table.rank-table tbody tr.rank-row:hover { background: rgba(0,0,0,.025); }
+    .rank-chevron { display: inline-block; margin-left: 6px; font-size: 14px; line-height: 1; color: rgba(0,0,0,.35); transition: transform .18s ease; }
+    .rank-row.is-open .rank-chevron { transform: rotate(90deg); }
+    .rank-row.is-open td { border-bottom: none; }
+    .bp-body table.rank-table tr.rank-detail > td.rank-detail-cell { width: auto; padding: 0; border-bottom: 1px solid rgba(0,0,0,.08); }
+    .rank-detail__grid { display: flex; flex-direction: column; gap: 10px; max-width: 600px; padding: 12px 0 16px 26px; }
+    .rank-detail__group { display: flex; align-items: stretch; gap: 16px; }
+    .rank-detail__rows { flex: 1; display: flex; flex-direction: column; gap: 7px; max-width: 420px; }
+    .rank-detail__bar { display: flex; align-items: center; gap: 10px; }
+    .rank-detail__cat { font: 400 12px/1.2 var(--sans); color: rgba(0,0,0,.5); width: 60px; flex-shrink: 0; }
+    .rank-detail__track { flex: 1; height: 6px; background: rgba(0,0,0,.07); border-radius: 3px; overflow: hidden; }
+    .rank-detail__fill { display: block; height: 100%; background: var(--ink); opacity: .55; border-radius: 3px; }
+    .rank-detail__fill--best { background: var(--green); opacity: 1; }
+    .rank-detail__pct { font: 400 12px/1.2 var(--sans); color: rgba(0,0,0,.55); width: 36px; text-align: right; flex-shrink: 0; }
+    .rank-detail__pct--best { color: var(--green); font-weight: 600; }
+    .rank-detail__bracket { display: flex; align-items: center; flex-shrink: 0; width: 124px; padding-left: 14px; border-left: 1.5px solid rgba(0,0,0,.15); }
+    .rank-detail__bracket-label { font: 600 11px/1.3 var(--sans); text-transform: uppercase; letter-spacing: .03em; color: rgba(0,0,0,.32); }
+
+    .bp-body blockquote { border-left: 2px solid rgba(0,0,0,.15); margin: 28px 0; padding: 4px 0 4px 20px; font-style: italic; color: rgba(0,0,0,.55); }
+    .bp-callout { margin: 28px 0; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; background: #fff; }
+    .bp-callout__title { background: #ECE7D8; padding: 16px 22px; border-bottom: 1px solid var(--border); }
+    .bp-callout__title-main { font: 700 20px/1.4 var(--sans); color: var(--ink); }
+    .bp-callout__subtitle { font: 400 13px/1.4 var(--sans); color: rgba(0,0,0,.55); margin-top: 4px; }
+    .bp-callout__body { background: #fff; padding: 20px 22px 22px; }
+    .bp-callout__body p { margin-bottom: 18px; }
+    .bp-callout__body p:last-child { margin-bottom: 0; }
+    .bp-body ul, .bp-body ol { padding-left: 22px; margin-bottom: 22px; }
+    .bp-body li { font: 400 19px/1.5 var(--serif); color: rgba(0,0,0,.8); margin-bottom: 6px; }
+    .bp-body strong { font-weight: 600; color: rgba(0,0,0,.9); }
+    .bp-body em { font-style: italic; }
+    .bp-body p.pullquote { font: italic 400 26px/1.4 var(--serif); text-align: center; color: var(--ink); margin: 36px 0; }
+    .bp-body a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; text-decoration-color: rgba(0,0,0,.3); }
+    .bp-body a:hover { text-decoration-color: var(--ink); }
+    .bp-body sup { font-size: 10px; vertical-align: super; line-height: 0; }
+    .bp-body hr { border: none; border-top: 1px solid var(--border); margin: 36px 0; }
+    .bp-body p.bp-disclaimer { font: 400 11px/1.5 var(--sans); color: rgba(0,0,0,.4); margin: 14px 0 0; }
+    /* Right empty column — third grid cell, no content */
+    .bp-body-right { /* empty grid placeholder */ }
+
+    /* Blog body scroll-reveal — same as About section */
+    .bp-body > *.pre-reveal {
+      opacity: 0;
+    }
+    .bp-body > *.is-visible {
+      animation: fadeSlideUp 0.45s ease forwards;
+    }
+    /* Related articles — same 1040px wrapper, same blog-list style */
+    .bp-related-outer { padding: 0 0 80px; }
+    .bp-related-h { font: 400 20px/1.2 var(--serif); color: var(--ink); margin: 48px 0 0; }
+    .bp-rel-list { border-top: 1px solid rgba(0,0,0,.1); margin-top: 20px; }
+    .bp-rel-item { display: grid; grid-template-columns: 88px 1fr 76px; column-gap: 24px; align-items: center; padding: 24px 0; border-bottom: 1px solid rgba(0,0,0,.08); cursor: pointer; }
+    .bp-rel-item:hover .bp-rel-title { opacity: .5; }
+    .bp-rel-thumb { width: 88px; height: 120px; object-fit: cover; display: block; }
+    .bp-rel-thumb-ph { width: 88px; height: 120px; flex-shrink: 0; }
+    .bp-rel-title { font: 400 20px/1.15 var(--serif); color: var(--ink); margin-bottom: 12px; transition: opacity .2s; }
+    .bp-rel-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .bp-rel-av-row { display: flex; }
+    .bp-rel-av { width: 22px; height: 22px; border-radius: 50%; background: rgba(0,0,0,.12); border: 2px solid var(--bg); display: inline-flex; align-items: center; justify-content: center; font: 700 7px/1 var(--sans); color: rgba(0,0,0,.5); overflow: hidden; }
+    .bp-rel-av + .bp-rel-av { margin-left: -5px; }
+    .bp-rel-names { font: 400 14px/1 var(--sans); color: rgba(0,0,0,.6); }
+    .bp-rel-sep { font: 400 14px/1 var(--sans); color: rgba(0,0,0,.28); }
+    .bp-rel-date { font: 400 14px/1 var(--sans); color: rgba(0,0,0,.6); }
+    .bp-rel-cta { font: 400 14px/1 var(--sans); color: rgba(0,0,0,.8); white-space: nowrap; text-align: right; }
+    @media (max-width: 820px) {
+      .bp-content { grid-template-columns: 1fr; }
+      .bp-toc { position: static; padding-right: 0; }
+      .rp-item, .bp-rel-item { grid-template-columns: 88px 1fr; }
+      .rp-item__cta, .bp-rel-cta { display: none; }
+    }
+    /* ══════════════════════════════════════
+       ADD BLOG MODAL
+    ══════════════════════════════════════ */
+    .modal-backdrop {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 36px 40px 32px;
+      width: min(calc(100% - 2rem), 480px);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+      position: relative;
+    }
+    .modal__title {
+      font: 400 22px/1.15 var(--serif);
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    .modal__sub {
+      font: 400 13px/1.5 var(--sans);
+      color: rgba(0,0,0,.45);
+      margin-bottom: 28px;
+    }
+    .modal__label {
+      font: 500 11px/1 var(--sans);
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: rgba(0,0,0,.4);
+      margin-bottom: 8px;
+      display: block;
+    }
+    .modal__input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid rgba(0,0,0,.15);
+      border-radius: 6px;
+      font: 400 14px/1 var(--sans);
+      background: #fff;
+      color: var(--ink);
+      outline: none;
+      margin-bottom: 20px;
+      transition: border-color .15s;
+    }
+    .modal__input:focus { border-color: rgba(0,0,0,.4); }
+    .modal__error {
+      font: 400 13px/1 var(--sans);
+      color: #c0392b;
+      margin-bottom: 16px;
+      min-height: 16px;
+    }
+    .modal__actions { display: flex; gap: 10px; justify-content: flex-end; }
+    .modal__close {
+      position: absolute; top: 16px; right: 18px;
+      background: none; border: none; cursor: pointer;
+      font-size: 18px; color: rgba(0,0,0,.35); line-height: 1;
+    }
+    .modal__close:hover { color: var(--ink); }
+
+    /* Upload step */
+    .upload-zone {
+      border: 1.5px dashed rgba(0,0,0,.2);
+      border-radius: 8px;
+      padding: 36px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+      margin-bottom: 20px;
+    }
+    .upload-zone:hover, .upload-zone.drag-over {
+      border-color: rgba(0,0,0,.5);
+      background: rgba(0,0,0,.03);
+    }
+    .upload-zone__icon { font-size: 28px; margin-bottom: 10px; }
+    .upload-zone__text {
+      font: 500 14px/1.5 var(--sans);
+      color: rgba(0,0,0,.55);
+    }
+    .upload-zone__hint {
+      font: 400 12px/1 var(--sans);
+      color: rgba(0,0,0,.3);
+      margin-top: 6px;
+    }
+    .upload-progress {
+      display: none;
+      text-align: center;
+      padding: 20px 0;
+    }
+    .upload-progress.active { display: block; }
+    .upload-progress__bar-wrap {
+      height: 3px; background: rgba(0,0,0,.08); border-radius: 2px; margin: 14px 0 10px;
+    }
+    .upload-progress__bar {
+      height: 100%; background: var(--ink); border-radius: 2px;
+      width: 0%; transition: width .3s ease;
+    }
+    .upload-progress__label {
+      font: 400 13px/1 var(--sans); color: rgba(0,0,0,.45);
+    }
+
+    /* Color picker for new blog thumbnail */
+    .color-row {
+      display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;
+    }
+    .color-swatch {
+      width: 28px; height: 28px; border-radius: 50%; cursor: pointer;
+      border: 2.5px solid transparent; transition: border-color .15s;
+    }
+    .color-swatch.selected { border-color: var(--ink); }
+
+    /* Add blog btn on research page */
+    .rp-add-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      font: 500 13px/1 var(--sans);
+      color: rgba(0,0,0,.7);
+      background: rgba(0,0,0,.06);
+      border: none; border-radius: 999px;
+      padding: 8px 14px; cursor: pointer;
+      transition: background .15s;
+    }
+    .rp-add-btn:hover { background: rgba(0,0,0,.1); }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     1. ANNOUNCEMENT BAR
+     sans · 14px · weight 500 · rgba(255,255,255,0.9) on black
+═══════════════════════════════════════ -->
+<div class="bar">
+  New blog — EnterpriseOps-Gym: Environments and Evaluations for Stateful Agentic Planning
+  <a href="#" onclick="event.preventDefault();router.openPost(0)">Read blog ↗</a>
+</div>
+
+<!-- ═══════════════════════════════════════
+     2. NAVBAR
+     Links: sans 14px weight 500 rgba(0,0,0,0.8)
+     Buttons: pill · 14px weight 500 · py-2 px-3
+═══════════════════════════════════════ -->
+<header class="nav">
+  <!-- nav__inner has its own full-width padding — NO .wrap wrapper -->
+  <nav class="nav__inner">
+
+    <a href="/" class="nav__logo">Anshool Agarwal</a>
+
+    <!-- Links ABSOLUTELY CENTERED on the page -->
+    <ul class="nav__links">
+      <li><a href="#">Experience</a></li>
+      <li><a href="#">Education</a></li>
+      <li><a href="#">Research Blogs</a></li>
+    </ul>
+
+    <!-- Buttons pushed to the RIGHT via margin-left: auto -->
+    <div class="nav__ctas">
+      <a href="#" class="btn btn--ghost">Contact</a>
+      <a href="#" class="btn btn--solid">Get data</a>
+    </div>
+
+  </nav>
+</header>
+<div id="pg-home">
+
+<!-- ═══════════════════════════════════════
+     3. HERO
+     H1:  serif · 46px · weight 400 · lh 1.1 · ls -0.01em
+     Sub: serif · 20px · weight 400 · lh 1.2 · rgba(0,0,0,0.55)
+     CTAs: "Get data" solid pill · "Explore research" ghost pill
+═══════════════════════════════════════ -->
+<section class="hero">
+  <!-- hero__top is its own narrow centered column (no .wrap needed) -->
+  <div class="hero__top">
+    <h2 class="hero__h2">Anshool Agarwal</h2>
+    <h4 class="hero__h4">Observe. Understand. Shape Outcomes.</h4>
+    <!-- Muted body text with blinking cursor -->
+    <div class="hero__sub">
+      <p class="hero__sub-intro" id="hw-line1"></p>
+      <p class="hero__sub-intro hero__sub-q" id="hw-line2"><span id="hw-line2-text"></span><span class="caret-blink" aria-hidden="true">|</span></p>
+    </div>
+  </div>
+
+  <!-- Full-width hero image — 3 hover segments -->
+  <div class="hero__img-wrap">
+    <div class="hero__segments">
+      <div class="hero__seg"><span class="hero__seg-word">Think</span></div>
+      <div class="hero__seg"><span class="hero__seg-word">Plan</span></div>
+      <div class="hero__seg"><span class="hero__seg-word">Act</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     4. LOGOS STRIP
+═══════════════════════════════════════ -->
+
+<!-- ═══════════════════════════════════════
+     5. EDITORIAL / PROBLEM SECTION
+     H2: serif 38px weight 400 lh 1.1 ls -0.01em rgba(0,0,0,0.8)
+     Body: sans 18px weight 500 lh 1.45 rgba(0,0,0,0.6)
+═══════════════════════════════════════ -->
+<section class="editorial">
+  <div class="editorial__inner">
+    <p class="editorial__label">About</p>
+    <h2 class="editorial__h2">
+      I'm curious about how systems work and drawn to problems that sit between businesses, products, people, markets, and now AI.
+    </h2>
+    <div class="editorial__body">
+      <div class="editorial__item">
+        <p class="editorial__num">01 / Techno-functional foundation</p>
+        <p>I bring a proven track record across techno-functional roles, with the ability to understand technical systems while connecting them to business context, objectives, and outcomes. In my previous work, I've managed and implemented large-scale, secure client-facing platforms designed to drive revenue by enabling customer engagement and revenue opportunities.</p>
+      </div>
+      <div class="editorial__item">
+        <p class="editorial__num">02 / Business function depth</p>
+        <p>Over time, I've been intentionally building depth across functions like GTM, product, strategy, operations, and customer understanding. I believe this helps me see problems more completely and shape plans that not just cater to the problem, but are also feasible to execute.</p>
+      </div>
+      <div class="editorial__item">
+        <p class="editorial__num">03 / Proof point</p>
+        <p>I'm proud of being someone who can adapt and act in ambiguity. At DeccanAI, I bridge research, project, and sales teams by translating technical capabilities into pre-sales client conversations. This has strengthened client messaging, reduced response time from 5 days to under 36 hours, and helped me earn "Outstanding Performer" in just my fourth month.</p>
+      </div>
+      <div class="editorial__item">
+        <p class="editorial__num">04 / Principles</p>
+        <p>I value clarity, ownership, and impact. I'm driven by first-principles thinking, questioning assumptions, and getting to the root of how things actually work. I'm most energised when working at the intersection of ambiguity and consequence.</p>
+      </div>
+      <div class="editorial__item" id="real-world-experience">
+        <p class="editorial__num">05 / Real-world Experience</p>
+        <div class="editorial__logo"><img src="DeccanAI_logo.png" alt="Deccan AI"></div>
+        <p class="editorial__role">AI Model Training Startup<br>Go-to-market - Technical Specialist</p>
+        <p>I manage discovery-to-production client conversion for AI labs and enterprises, translating requirements into scoped AI solutions across domains like Coding, Agentic AI, RL, Robotics, Multimodal, and Linguistic AI. I also support sales teams with technical context, enablement, collateral, and customer engagement, helping reduce client response time by 75%.</p>
+        <p class="editorial__data-label">Past experience</p>
+        <div class="editorial__exp-grid">
+          <div class="exp-card">
+            <div class="exp-card__logo"><img src="maruti_logo.png" alt="Maruti Suzuki"></div>
+            <p class="exp-card__role">Digital Transformation &mdash; Assistant Manager, CIO&rsquo;s Office</p>
+            <p class="exp-card__desc">Led enterprise AI transformation across manufacturing and supply chain — covering AI frameworks, vendor management, responsible AI, and key business use cases.</p>
+          </div>
+          <div class="exp-card">
+            <div class="exp-card__logo"><img src="motilal_logo.png" alt="Motilal Oswal Financial Services"></div>
+            <p class="exp-card__role">Investment Banking &mdash; BFSI Intern</p>
+            <p class="exp-card__desc">M&amp;A research, deal screening, and pitch materials for live BFSI deals — analyzing 200+ firms across company profiles, investor decks, and market snapshots.</p>
+          </div>
+          <div class="exp-card">
+            <div class="exp-card__logo"><img src="ajanta_logo.png" alt="Ajanta Pharma"></div>
+            <p class="exp-card__role">Digital Transformation Intern</p>
+            <p class="exp-card__desc">Built a Python automation system for monthly sales processing, reconciliation, and finance reporting — combining financial analysis with workflow automation.</p>
+          </div>
+          <div class="exp-card">
+            <div class="exp-card__logo"><img src="rotary_logo.png" alt="Rotary International"></div>
+            <p class="exp-card__role">Member</p>
+            <p class="exp-card__desc">Contributed across community service, youth exchange, sustainability, literacy, and mental well-being through fundraising, professional development, and volunteering projects.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH SECTION ROW on homepage -->
+<div class="wrap">
+  <div class="sec-row" id="home-research-row">
+    <div class="sec-row__top">
+      <h2 class="sec-row__h">Research Blogs</h2>
+      <button class="btn btn--ghost" onclick="router.show('research')">More writing ↗</button>
+    </div>
+    <div class="blog-grid" id="home-blog-grid"></div>
+  </div>
+</div>
+
+</div><!-- /#pg-home -->
+
+<!-- ═══════════════════════════════════════
+     CONTACT PAGE
+═══════════════════════════════════════ -->
+<div id="pg-contact" hidden>
+  <div class="contact-wrap">
+
+    <!-- Left: heading + form -->
+    <div>
+      <h1 class="contact-h1">Contact Me</h1>
+      <form id="contact-form" onsubmit="handleContactSubmit(event)">
+        <div class="cf-row">
+          <div class="cf-field">
+            <label>First name <span style="color:rgba(0,0,0,.4)">*</span></label>
+            <input type="text" placeholder="First" required>
+          </div>
+          <div class="cf-field">
+            <label>Last name <span style="color:rgba(0,0,0,.4)">*</span></label>
+            <input type="text" placeholder="Last" required>
+          </div>
+        </div>
+        <div class="cf-field cf-field-full">
+          <label>Email <span style="color:rgba(0,0,0,.4)">*</span></label>
+          <input type="email" placeholder="Your email" required>
+        </div>
+        <div class="cf-field cf-field-full">
+          <label>Phone no <span style="color:rgba(0,0,0,.3); font-weight:400; font-size:12px;">(optional)</span></label>
+          <input type="tel" placeholder="Your phone number">
+        </div>
+        <div class="cf-field">
+          <label>Purpose <span style="color:rgba(0,0,0,.4)">*</span></label>
+          <textarea placeholder="Enter a description..." required></textarea>
+        </div>
+        <button type="submit" class="cf-submit">Submit</button>
+        <p class="cf-success" id="contact-success">Thanks — I'll be in touch shortly.</p>
+      </form>
+    </div>
+
+    <!-- Right: subtitle + dark card -->
+    <div>
+      <p class="contact-sub">Open to conversations about AI strategy, enterprise, research, or collaboration. I try to respond within 48 hours.</p>
+      <div class="contact-dark-card">
+        <div class="cd-block">
+          <p class="cd-label">General inquiries</p>
+          <p class="cd-value"><a href="mailto:AnshoolAgarwal@gmail.com">AnshoolAgarwal@gmail.com</a></p>
+        </div>
+        <div class="cd-block">
+          <p class="cd-label">LinkedIn</p>
+          <p class="cd-value"><a href="https://linkedin.com/in/sparshvishal" target="_blank">linkedin.com/in/sparshvishal</a></p>
+        </div>
+        <p class="cd-disclaimer">*If you're reaching out about a role or collaboration, LinkedIn is the fastest channel. All messages are read and responded to within 48 hours.</p>
+        <div class="cd-block">
+          <p class="cd-label">Social</p>
+          <div class="cd-social">
+            <a href="https://linkedin.com/in/sparshvishal" target="_blank">LinkedIn</a>
+            <a href="https://x.com/sparshvishal" target="_blank">X</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     RESEARCH PAGE
+═══════════════════════════════════════ -->
+<div id="pg-research" hidden>
+  <div class="rp-wrap">
+    <div class="rp-hero">
+      <p class="rp-hero__eyebrow">Research Blogs</p>
+      <h1 class="rp-hero__h1">Ideas worth writing down.</h1>
+      <p class="rp-hero__desc">Thinking out loud at the intersection of AI, markets, enterprise strategy, and everything in between. A space where I connect the dots across my experiences, conversations, thoughts, learnings, and research.</p>
+    </div>
+    <div class="rp-feat">
+      <div class="rp-feat__grid">
+        <div class="rp-feat-card" style="background:#1a2e24;" onclick="router.openPost(0)">
+          <div>
+            <p class="rp-feat-card__eyebrow">Featured note</p>
+            <p class="rp-feat-card__name">EnterpriseOps-Gym and why enterprise agents need stateful planning, tool use, and grounded evaluation.</p>
+          </div>
+          <p class="rp-feat-card__cta">Read Essay ↗</p>
+        </div>
+        <div class="rp-feat-card" style="background:#1e1e1e;">
+          <div>
+            <p class="rp-feat-card__eyebrow">Current research threads</p>
+            <p class="rp-feat-card__name">What I'm exploring across AI adoption, markets, enterprise strategy, evals, and agentic workflows.</p>
+          </div>
+          <p class="rp-feat-card__cta">Stay Tuned</p>
+        </div>
+      </div>
+    </div>
+    <div class="rp-list-outer">
+      <!-- List header row: label + Add button -->
+      <div style="padding-bottom:16px;">
+        <span style="font:500 12px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:rgba(0,0,0,.35);">All writing</span>
+      </div>
+      <div class="rp-list" id="rp-blog-list"></div>
+    </div>
+  </div>
+  <input type="file" id="docx-file-input" accept=".docx" style="display:none">
+</div>
+
+<!-- ═══════════════════════════════════════
+     EXPERIENCE PAGE
+═══════════════════════════════════════ -->
+<div id="pg-experience" hidden>
+  <div class="rp-wrap">
+    <div class="rp-feat" style="padding-top:56px;">
+      <div class="rp-feat__grid rp-feat__grid--3">
+        <div class="rp-feat-card" style="background:#1a2e24;" onclick="showExpDetail(0)">
+          <p class="rp-feat-card__name">Experience</p>
+        </div>
+        <div class="rp-feat-card" style="background:#1e1e1e;" onclick="showExpDetail(1)">
+          <p class="rp-feat-card__name">Self Initiatives</p>
+        </div>
+        <div class="rp-feat-card" style="background:#2a2040;" onclick="showExpDetail(2)">
+          <p class="rp-feat-card__name">Achievements</p>
+        </div>
+      </div>
+      <div class="exp-detail" id="exp-detail" hidden></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ADD BLOG MODAL
+══════════════════════════════════════ -->
+<div class="modal-backdrop" id="add-blog-modal">
+  <div class="modal">
+    <button class="modal__close" id="modal-close-btn">✕</button>
+
+    <!-- Step 1: Password -->
+    <div id="modal-step-pw">
+      <p class="modal__title">Add New Blog</p>
+      <p class="modal__sub">Enter the password to unlock publishing.</p>
+      <label class="modal__label">Password</label>
+      <input class="modal__input" type="password" id="modal-pw-input" placeholder="••••••••••" autocomplete="off">
+      <p class="modal__error" id="modal-pw-error"></p>
+      <div class="modal__actions">
+        <button class="btn btn--ghost" id="modal-pw-cancel">Cancel</button>
+        <button class="btn btn--solid" id="modal-pw-submit">Continue →</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Upload -->
+    <div id="modal-step-upload" style="display:none">
+      <p class="modal__title">Upload Word Doc</p>
+      <p class="modal__sub">Drop your .docx file — headings, paragraphs, bold, lists, and images are all extracted automatically.</p>
+
+      <div class="upload-zone" id="upload-zone">
+        <div class="upload-zone__icon">📄</div>
+        <p class="upload-zone__text">Click to choose or drag &amp; drop</p>
+        <p class="upload-zone__hint">.docx files only</p>
+      </div>
+
+      <div class="upload-progress" id="upload-progress">
+        <p class="upload-progress__label" id="upload-status">Reading document…</p>
+        <div class="upload-progress__bar-wrap">
+          <div class="upload-progress__bar" id="upload-bar"></div>
+        </div>
+      </div>
+
+      <label class="modal__label" style="margin-top:4px;">Card colour</label>
+      <div class="color-row" id="color-row">
+        <div class="color-swatch selected" style="background:#2d3a2e;" data-color="#2d3a2e"></div>
+        <div class="color-swatch" style="background:#1e1e1e;" data-color="#1e1e1e"></div>
+        <div class="color-swatch" style="background:#1a2e24;" data-color="#1a2e24"></div>
+        <div class="color-swatch" style="background:#2a2040;" data-color="#2a2040"></div>
+        <div class="color-swatch" style="background:#3a2010;" data-color="#3a2010"></div>
+        <div class="color-swatch" style="background:#1a1a2e;" data-color="#1a1a2e"></div>
+        <div class="color-swatch" style="background:#0d2137;" data-color="#0d2137"></div>
+        <div class="color-swatch" style="background:#2e1a1a;" data-color="#2e1a1a"></div>
+      </div>
+    </div>
+
+    <!-- Step 3: Done -->
+    <div id="modal-step-done" style="display:none">
+      <p class="modal__title" style="margin-bottom:10px;">✓ Blog published!</p>
+      <p class="modal__sub">Your new post is now live in the list.</p>
+      <div class="modal__actions" style="margin-top:20px;">
+        <button class="btn btn--solid" id="modal-done-close">View blog</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     EDUCATION PAGE
+═══════════════════════════════════════ -->
+<div id="pg-education" hidden>
+  <div class="rp-wrap">
+    <div class="rp-hero">
+      <p class="rp-hero__eyebrow">Education</p>
+      <h1 class="rp-hero__h1">Academic foundation.</h1>
+      <p class="rp-hero__desc">Degrees, institutions, and the learning that shaped how I think about technology, business, and strategy.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     BLOG POST PAGE
+═══════════════════════════════════════ -->
+<div id="pg-blog" hidden>
+  <div class="bp-article">
+    <div class="bp-wrap">
+      <div class="bp-back" id="bp-back">← Back</div>
+      <div id="bp-hero-wrap"><img class="bp-hero" src="abstract.png" alt="Abstract green motion-blur texture"></div>
+      <div class="bp-header">
+        <p class="bp-eyebrow" id="bp-eyebrow"></p>
+        <h1 class="bp-h1" id="bp-title"></h1>
+        <div class="bp-authors" id="bp-authors"></div>
+      </div>
+      <hr class="bp-rule">
+      <div class="bp-content">
+        <nav class="bp-toc" id="bp-toc" hidden></nav>
+        <div class="bp-body" id="bp-body"></div>
+        <div class="bp-body-right"></div>
+      </div>
+    </div>
+    <div class="bp-wrap bp-related-outer" id="bp-related-outer" hidden>
+      <p class="bp-related-h">Related articles</p>
+      <div class="bp-rel-list" id="bp-related"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════ -->
+<footer class="footer" id="site-footer">
+  <div class="wrap">
+    <div class="footer__inner">
+      <div class="footer__left">
+        <span class="footer__name">Anshool Agarwal</span>
+        <span class="footer__tagline">Building the future of AI.</span>
+      </div>
+      <div class="footer__social">
+        <!-- GitHub -->
+        <a href="https://github.com/sparshvishal" target="_blank" aria-label="GitHub">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/>
+          </svg>
+        </a>
+        <!-- LinkedIn -->
+        <a href="https://linkedin.com/in/sparshvishal" target="_blank" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+          </svg>
+        </a>
+        <!-- YouTube -->
+        <a href="https://youtube.com/@sparshvishal" target="_blank" aria-label="YouTube">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+        </a>
+        <!-- Email -->
+        <a href="mailto:AnshoolAgarwal@gmail.com" aria-label="Email">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<div class="footer-bar">
+  <div class="footer-bar__inner wrap">
+    <div class="footer-bar__links">
+      <a href="#">Privacy Policy</a>
+      <span class="footer-bar__sep">|</span>
+      <a href="#">Terms of Service</a>
+    </div>
+    <span class="footer-bar__copy">&copy; 2026 Anshool Agarwal. All rights reserved.</span>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════
+   DATA
+══════════════════════════════════════ */
+const BLOGS = [
+  {
+    title: 'My notes on EnterpriseOps-Gym: Environments and Evaluations for Stateful Agentic Planning and Tool Use in Enterprise Settings',
+    date: 'Jun 2026',
+    type: 'Blog',
+    thumbColor: '#2d3a2e',
+    heroColor: '#1a2e24',
+    heroImage: 'abstract.png',
+    authors: [{ initials: 'AA', name: 'Anshool Agarwal', img: null }],
+    toc: [
+      { id: 'the-paper', text: 'The Paper' },
+      { id: 'papers-focus', text: "Paper's Focus" },
+      { id: 'main-findings', text: 'Main Findings' },
+      { id: 'compounding-errors', text: 'Compounding Errors' },
+      { id: 'strategic-planning', text: 'Strategic Planning' },
+      { id: 'my-ideas', text: 'My Ideas' },
+      { id: 'conclusion', text: 'Conclusion' },
+    ],
+    body: `
+      <p>Model training in 2025 &amp; early 2026 was all about tool-handling, function-calling and instruction-following.</p>
+      <div class="bp-callout">
+        <div class="bp-callout__title"><div class="bp-callout__title-main">Let's hear from the model builders themselves:</div></div>
+        <div class="bp-callout__body">
+          <p><strong>Opus 4.7:</strong> Opus 4.7 is substantially better at following instructions. Opus 4.7 takes the instructions literally.</p>
+          <p><strong>GPT&#8209;5.4:</strong> GPT&#8209;5.4 has significantly improved how models work with external tools. Agents can now operate across larger tool ecosystems, choose the right tools more reliably.</p>
+        </div>
+      </div>
+      <p>As models move from experiments to enterprise deployment, where the most value of AI will be unlocked, a harder problem awaits. Enterprise settings will test model capability to plan, execute, and maintain correctness across a constrained, stateful, policy-heavy workflow.</p>
+      <p>Enterprise agents are not operating in a clean playground. They are operating inside systems where every action can change state, trigger downstream workflows, violate access policies, or create silent errors that compound over time.</p>
+      <p>That is why I found this paper interesting. It argues that current benchmarks do not fully capture the difficulty of enterprise automation &mdash; and therefore challenging whether scoring high on existing benchmarks will actually lead to an impact in the economic sectors.</p>
+
+      <h2 id="the-paper">The Paper</h2>
+      <p>Real enterprise work requires long-horizon planning, state management, policy compliance, safe refusal, and the ability to operate across multiple interconnected systems. The paper introduces <strong>EnterpriseOps-Gym</strong>, a benchmark designed to evaluate AI agents in realistic enterprise-like environments.</p>
+      <p>The benchmark includes <strong>1,150 expert-curated tasks</strong> across eight domains &mdash; Customer Service, HRM, ITSM, Email, Calendar, Teams, Drive, and Hybrid cross-domain workflows. It uses a containerized sandbox with <strong>164 relational database tables</strong> and <strong>512 functional tools</strong>.</p>
+      <p>That level of complexity matters because enterprise work is rarely a single-step instruction. It is usually a chain of dependent actions. For example, an agent may need to search a support case, retrieve the correct knowledge article, check a policy, link the article with the correct usage label, identify the customer's email through another record, and then send a notification. Missing one intermediate lookup or using the wrong state label can make the entire workflow fail.</p>
+      <p>This is the real challenge: enterprise agents need to be correct not only at the final step, but across every transition.</p>
+      <div class="bp-callout">
+        <div class="bp-callout__title">
+          <div class="bp-callout__title-main">My Take</div>
+          <div class="bp-callout__subtitle">Based on primary conversations with business executives</div>
+        </div>
+        <div class="bp-callout__body">
+          <p>A key distinction between experimentation and enterprise deployment is intent and ownership: In experimentation, an 80% success rate is considered acceptable. While in enterprises, any system with &lt;99% success rate is not production-ready.</p>
+        </div>
+      </div>
+
+      <h2 id="papers-focus">Paper's Focus</h2>
+      <p>The paper evaluates several capabilities that are central to enterprise-grade agents:</p>
+      <ol>
+        <li>Constraint-aware planning</li>
+        <li>Long-horizon stateful execution</li>
+        <li>Accurate tool calling</li>
+        <li>Correct handoff between intermediate steps</li>
+        <li>Policy and process compliance</li>
+        <li>Safe refusal when a task is infeasible</li>
+        <li>Cross-domain orchestration across enterprise systems</li>
+      </ol>
+      <p>The key difference from simpler tool-use benchmarks is that EnterpriseOps-Gym does not only ask, "Did the agent call a tool?" It asks, "Did the final system state satisfy the business goal, maintain integrity, follow policy, and avoid harmful side effects?"</p>
+      <p>That distinction is important. In real enterprise environments, an agent may produce a plausible-looking answer while still corrupting the system state. It may complete part of the workflow but forget a required state transition. It may retrieve the right document but label it incorrectly. It may assign a task to a user who does not have the right permission. These are not minor mistakes &mdash; they are production risks.</p>
+
+      <h2 id="main-findings">Main Findings</h2>
+      <p class="pullquote">Current agents are not enterprise-ready.</p>
+      <p>Even the best-performing models fall far short:</p>
+      <table class="rank-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Model</th>
+            <th>Hybrid Tasks</th>
+            <th>Overall Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="rank-row" data-target="rd-1" onclick="this.classList.toggle('is-open');document.getElementById(this.dataset.target).hidden=!this.classList.contains('is-open')"><td><span class="rank-num">1</span><span class="rank-chevron">&rsaquo;</span></td><td>Gemini 3.5 Flash (High)</td><td>35.3%</td><td>46.0%</td></tr>
+          <tr class="rank-detail" id="rd-1" hidden><td class="rank-detail-cell" colspan="4"><div class="rank-detail__grid">
+            <div class="rank-detail__group">
+              <div class="rank-detail__rows">
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Drive</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:92.0%"></span></span><span class="rank-detail__pct">55.2%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Calendar</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:70.5%"></span></span><span class="rank-detail__pct">42.3%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Teams</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:80.0%"></span></span><span class="rank-detail__pct">48.0%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Email</span><span class="rank-detail__track"><span class="rank-detail__fill rank-detail__fill--best" style="width:93.0%"></span></span><span class="rank-detail__pct rank-detail__pct--best">55.8%</span></div>
+              </div>
+              <div class="rank-detail__bracket"><span class="rank-detail__bracket-label">General Productivity</span></div>
+            </div>
+            <div class="rank-detail__group">
+              <div class="rank-detail__rows">
+                <div class="rank-detail__bar"><span class="rank-detail__cat">CSM</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:79.8%"></span></span><span class="rank-detail__pct">47.9%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">ITSM</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:70.8%"></span></span><span class="rank-detail__pct">42.5%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">HRM</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:68.0%"></span></span><span class="rank-detail__pct">40.8%</span></div>
+              </div>
+              <div class="rank-detail__bracket"><span class="rank-detail__bracket-label">Critical Business Functions</span></div>
+            </div>
+          </div></td></tr>
+          <tr class="rank-row" data-target="rd-2" onclick="this.classList.toggle('is-open');document.getElementById(this.dataset.target).hidden=!this.classList.contains('is-open')"><td><span class="rank-num">2</span><span class="rank-chevron">&rsaquo;</span></td><td>Claude Opus 4.6</td><td>34.0%</td><td>44.6%</td></tr>
+          <tr class="rank-detail" id="rd-2" hidden><td class="rank-detail-cell" colspan="4"><div class="rank-detail__grid">
+            <div class="rank-detail__group">
+              <div class="rank-detail__rows">
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Drive</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:95.2%"></span></span><span class="rank-detail__pct">57.1%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Calendar</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:72.2%"></span></span><span class="rank-detail__pct">43.3%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Teams</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:86.7%"></span></span><span class="rank-detail__pct">52.0%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Email</span><span class="rank-detail__track"><span class="rank-detail__fill rank-detail__fill--best" style="width:96.2%"></span></span><span class="rank-detail__pct rank-detail__pct--best">57.7%</span></div>
+              </div>
+              <div class="rank-detail__bracket"><span class="rank-detail__bracket-label">General Productivity</span></div>
+            </div>
+            <div class="rank-detail__group">
+              <div class="rank-detail__rows">
+                <div class="rank-detail__bar"><span class="rank-detail__cat">CSM</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:75.2%"></span></span><span class="rank-detail__pct">45.1%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">ITSM</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:55.5%"></span></span><span class="rank-detail__pct">33.3%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">HRM</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:75.2%"></span></span><span class="rank-detail__pct">45.1%</span></div>
+              </div>
+              <div class="rank-detail__bracket"><span class="rank-detail__bracket-label">Critical Business Functions</span></div>
+            </div>
+          </div></td></tr>
+          <tr class="rank-row" data-target="rd-3" onclick="this.classList.toggle('is-open');document.getElementById(this.dataset.target).hidden=!this.classList.contains('is-open')"><td><span class="rank-num">3</span><span class="rank-chevron">&rsaquo;</span></td><td>Claude Opus 4.7 (High)</td><td>31.4%</td><td>41.2%</td></tr>
+          <tr class="rank-detail" id="rd-3" hidden><td class="rank-detail-cell" colspan="4"><div class="rank-detail__grid">
+            <div class="rank-detail__group">
+              <div class="rank-detail__rows">
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Drive</span><span class="rank-detail__track"><span class="rank-detail__fill rank-detail__fill--best" style="width:98.5%"></span></span><span class="rank-detail__pct rank-detail__pct--best">59.1%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Calendar</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:69.0%"></span></span><span class="rank-detail__pct">41.4%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Teams</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:90.0%"></span></span><span class="rank-detail__pct">54.0%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Email</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:93.0%"></span></span><span class="rank-detail__pct">55.8%</span></div>
+              </div>
+              <div class="rank-detail__bracket"><span class="rank-detail__bracket-label">General Productivity</span></div>
+            </div>
+            <div class="rank-detail__group">
+              <div class="rank-detail__rows">
+                <div class="rank-detail__bar"><span class="rank-detail__cat">CSM</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:55.5%"></span></span><span class="rank-detail__pct">33.3%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">ITSM</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:50.7%"></span></span><span class="rank-detail__pct">30.4%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">HRM</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:39.8%"></span></span><span class="rank-detail__pct">23.9%</span></div>
+              </div>
+              <div class="rank-detail__bracket"><span class="rank-detail__bracket-label">Critical Business Functions</span></div>
+            </div>
+          </div></td></tr>
+          <tr class="rank-row" data-target="rd-4" onclick="this.classList.toggle('is-open');document.getElementById(this.dataset.target).hidden=!this.classList.contains('is-open')"><td><span class="rank-num">3</span><span class="rank-chevron">&rsaquo;</span></td><td>GPT&#8209;5.5 (High)</td><td>25.5%</td><td>41.2%</td></tr>
+          <tr class="rank-detail" id="rd-4" hidden><td class="rank-detail-cell" colspan="4"><div class="rank-detail__grid">
+            <div class="rank-detail__group">
+              <div class="rank-detail__rows">
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Drive</span><span class="rank-detail__track"><span class="rank-detail__fill rank-detail__fill--best" style="width:84.2%"></span></span><span class="rank-detail__pct rank-detail__pct--best">50.5%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Calendar</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:75.3%"></span></span><span class="rank-detail__pct">45.2%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Teams</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:68.3%"></span></span><span class="rank-detail__pct">41.0%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Email</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:80.2%"></span></span><span class="rank-detail__pct">48.1%</span></div>
+              </div>
+              <div class="rank-detail__bracket"><span class="rank-detail__bracket-label">General Productivity</span></div>
+            </div>
+            <div class="rank-detail__group">
+              <div class="rank-detail__rows">
+                <div class="rank-detail__bar"><span class="rank-detail__cat">CSM</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:77.0%"></span></span><span class="rank-detail__pct">46.2%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">ITSM</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:57.2%"></span></span><span class="rank-detail__pct">34.3%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">HRM</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:64.3%"></span></span><span class="rank-detail__pct">38.6%</span></div>
+              </div>
+              <div class="rank-detail__bracket"><span class="rank-detail__bracket-label">Critical Business Functions</span></div>
+            </div>
+          </div></td></tr>
+          <tr class="rank-row" data-target="rd-5" onclick="this.classList.toggle('is-open');document.getElementById(this.dataset.target).hidden=!this.classList.contains('is-open')"><td><span class="rank-num">5</span><span class="rank-chevron">&rsaquo;</span></td><td>Claude Sonnet 4.6</td><td>29.4%</td><td>40.4%</td></tr>
+          <tr class="rank-detail" id="rd-5" hidden><td class="rank-detail-cell" colspan="4"><div class="rank-detail__grid">
+            <div class="rank-detail__group">
+              <div class="rank-detail__rows">
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Drive</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:95.2%"></span></span><span class="rank-detail__pct">57.1%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Calendar</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:67.3%"></span></span><span class="rank-detail__pct">40.4%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Teams</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:78.3%"></span></span><span class="rank-detail__pct">47.0%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Email</span><span class="rank-detail__track"><span class="rank-detail__fill rank-detail__fill--best" style="width:97.8%"></span></span><span class="rank-detail__pct rank-detail__pct--best">58.7%</span></div>
+              </div>
+              <div class="rank-detail__bracket"><span class="rank-detail__bracket-label">General Productivity</span></div>
+            </div>
+            <div class="rank-detail__group">
+              <div class="rank-detail__rows">
+                <div class="rank-detail__bar"><span class="rank-detail__cat">CSM</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:54.3%"></span></span><span class="rank-detail__pct">32.6%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">ITSM</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:59.3%"></span></span><span class="rank-detail__pct">35.6%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">HRM</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:61.7%"></span></span><span class="rank-detail__pct">37.0%</span></div>
+              </div>
+              <div class="rank-detail__bracket"><span class="rank-detail__bracket-label">Critical Business Functions</span></div>
+            </div>
+          </div></td></tr>
+          <tr class="rank-row" data-target="rd-6" onclick="this.classList.toggle('is-open');document.getElementById(this.dataset.target).hidden=!this.classList.contains('is-open')"><td><span class="rank-num">6</span><span class="rank-chevron">&rsaquo;</span></td><td>Claude Opus 4.5</td><td>30.7%</td><td>37.0%</td></tr>
+          <tr class="rank-detail" id="rd-6" hidden><td class="rank-detail-cell" colspan="4"><div class="rank-detail__grid">
+            <div class="rank-detail__group">
+              <div class="rank-detail__rows">
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Drive</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:82.5%"></span></span><span class="rank-detail__pct">49.5%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Calendar</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:72.0%"></span></span><span class="rank-detail__pct">43.2%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Teams</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:83.3%"></span></span><span class="rank-detail__pct">50.0%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Email</span><span class="rank-detail__track"><span class="rank-detail__fill rank-detail__fill--best" style="width:86.5%"></span></span><span class="rank-detail__pct rank-detail__pct--best">51.9%</span></div>
+              </div>
+              <div class="rank-detail__bracket"><span class="rank-detail__bracket-label">General Productivity</span></div>
+            </div>
+            <div class="rank-detail__group">
+              <div class="rank-detail__rows">
+                <div class="rank-detail__bar"><span class="rank-detail__cat">CSM</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:57.0%"></span></span><span class="rank-detail__pct">34.2%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">ITSM</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:39.7%"></span></span><span class="rank-detail__pct">23.8%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">HRM</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:53.5%"></span></span><span class="rank-detail__pct">32.1%</span></div>
+              </div>
+              <div class="rank-detail__bracket"><span class="rank-detail__bracket-label">Critical Business Functions</span></div>
+            </div>
+          </div></td></tr>
+          <tr class="rank-row" data-target="rd-7" onclick="this.classList.toggle('is-open');document.getElementById(this.dataset.target).hidden=!this.classList.contains('is-open')"><td><span class="rank-num">7</span><span class="rank-chevron">&rsaquo;</span></td><td>Claude Opus 4.8 (High)</td><td>24.2%</td><td>36.7%</td></tr>
+          <tr class="rank-detail" id="rd-7" hidden><td class="rank-detail-cell" colspan="4"><div class="rank-detail__grid">
+            <div class="rank-detail__group">
+              <div class="rank-detail__rows">
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Drive</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:87.3%"></span></span><span class="rank-detail__pct">52.4%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Calendar</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:52.8%"></span></span><span class="rank-detail__pct">31.7%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Teams</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:70.0%"></span></span><span class="rank-detail__pct">42.0%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Email</span><span class="rank-detail__track"><span class="rank-detail__fill rank-detail__fill--best" style="width:91.3%"></span></span><span class="rank-detail__pct rank-detail__pct--best">54.8%</span></div>
+              </div>
+              <div class="rank-detail__bracket"><span class="rank-detail__bracket-label">General Productivity</span></div>
+            </div>
+            <div class="rank-detail__group">
+              <div class="rank-detail__rows">
+                <div class="rank-detail__bar"><span class="rank-detail__cat">CSM</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:62.8%"></span></span><span class="rank-detail__pct">37.7%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">ITSM</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:41.7%"></span></span><span class="rank-detail__pct">25.0%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">HRM</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:42.5%"></span></span><span class="rank-detail__pct">25.5%</span></div>
+              </div>
+              <div class="rank-detail__bracket"><span class="rank-detail__bracket-label">Critical Business Functions</span></div>
+            </div>
+          </div></td></tr>
+          <tr class="rank-row" data-target="rd-8" onclick="this.classList.toggle('is-open');document.getElementById(this.dataset.target).hidden=!this.classList.contains('is-open')"><td><span class="rank-num">14</span><span class="rank-chevron">&rsaquo;</span></td><td>Nvidia Nemotron 3 Super (Think)</td><td>29.8%</td><td>27.3%</td></tr>
+          <tr class="rank-detail" id="rd-8" hidden><td class="rank-detail-cell" colspan="4"><div class="rank-detail__grid">
+            <div class="rank-detail__group">
+              <div class="rank-detail__rows">
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Drive</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:50.2%"></span></span><span class="rank-detail__pct">30.1%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Calendar</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:52.8%"></span></span><span class="rank-detail__pct">31.7%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Teams</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:73.8%"></span></span><span class="rank-detail__pct">44.3%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Email</span><span class="rank-detail__track"><span class="rank-detail__fill rank-detail__fill--best" style="width:95.0%"></span></span><span class="rank-detail__pct rank-detail__pct--best">57.0%</span></div>
+              </div>
+              <div class="rank-detail__bracket"><span class="rank-detail__bracket-label">General Productivity</span></div>
+            </div>
+            <div class="rank-detail__group">
+              <div class="rank-detail__rows">
+                <div class="rank-detail__bar"><span class="rank-detail__cat">CSM</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:28.0%"></span></span><span class="rank-detail__pct">16.8%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">ITSM</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:27.8%"></span></span><span class="rank-detail__pct">16.7%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">HRM</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:27.2%"></span></span><span class="rank-detail__pct">16.3%</span></div>
+              </div>
+              <div class="rank-detail__bracket"><span class="rank-detail__bracket-label">Critical Business Functions</span></div>
+            </div>
+          </div></td></tr>
+          <tr class="rank-row" data-target="rd-9" onclick="this.classList.toggle('is-open');document.getElementById(this.dataset.target).hidden=!this.classList.contains('is-open')"><td><span class="rank-num">15</span><span class="rank-chevron">&rsaquo;</span></td><td>Kimi&#8209;K2.5&#8209;Thinking</td><td>24.2%</td><td>26.2%</td></tr>
+          <tr class="rank-detail" id="rd-9" hidden><td class="rank-detail-cell" colspan="4"><div class="rank-detail__grid">
+            <div class="rank-detail__group">
+              <div class="rank-detail__rows">
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Drive</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:73.0%"></span></span><span class="rank-detail__pct">43.8%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Calendar</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:52.8%"></span></span><span class="rank-detail__pct">31.7%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Teams</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:73.3%"></span></span><span class="rank-detail__pct">44.0%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Email</span><span class="rank-detail__track"><span class="rank-detail__fill rank-detail__fill--best" style="width:77.0%"></span></span><span class="rank-detail__pct rank-detail__pct--best">46.2%</span></div>
+              </div>
+              <div class="rank-detail__bracket"><span class="rank-detail__bracket-label">General Productivity</span></div>
+            </div>
+            <div class="rank-detail__group">
+              <div class="rank-detail__rows">
+                <div class="rank-detail__bar"><span class="rank-detail__cat">CSM</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:23.5%"></span></span><span class="rank-detail__pct">14.1%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">ITSM</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:20.3%"></span></span><span class="rank-detail__pct">12.2%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">HRM</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:32.7%"></span></span><span class="rank-detail__pct">19.6%</span></div>
+              </div>
+              <div class="rank-detail__bracket"><span class="rank-detail__bracket-label">Critical Business Functions</span></div>
+            </div>
+          </div></td></tr>
+          <tr class="rank-row" data-target="rd-10" onclick="this.classList.toggle('is-open');document.getElementById(this.dataset.target).hidden=!this.classList.contains('is-open')"><td><span class="rank-num">18</span><span class="rank-chevron">&rsaquo;</span></td><td>GPT&#8209;OSS&#8209;120B (High)</td><td>19.6%</td><td>23.0%</td></tr>
+          <tr class="rank-detail" id="rd-10" hidden><td class="rank-detail-cell" colspan="4"><div class="rank-detail__grid">
+            <div class="rank-detail__group">
+              <div class="rank-detail__rows">
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Drive</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:68.3%"></span></span><span class="rank-detail__pct">41.0%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Calendar</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:59.3%"></span></span><span class="rank-detail__pct">35.6%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Teams</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:53.3%"></span></span><span class="rank-detail__pct">32.0%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">Email</span><span class="rank-detail__track"><span class="rank-detail__fill rank-detail__fill--best" style="width:70.5%"></span></span><span class="rank-detail__pct rank-detail__pct--best">42.3%</span></div>
+              </div>
+              <div class="rank-detail__bracket"><span class="rank-detail__bracket-label">General Productivity</span></div>
+            </div>
+            <div class="rank-detail__group">
+              <div class="rank-detail__rows">
+                <div class="rank-detail__bar"><span class="rank-detail__cat">CSM</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:27.2%"></span></span><span class="rank-detail__pct">16.3%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">ITSM</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:10.2%"></span></span><span class="rank-detail__pct">6.1%</span></div>
+                <div class="rank-detail__bar"><span class="rank-detail__cat">HRM</span><span class="rank-detail__track"><span class="rank-detail__fill" style="width:27.2%"></span></span><span class="rank-detail__pct">16.3%</span></div>
+              </div>
+              <div class="rank-detail__bracket"><span class="rank-detail__bracket-label">Critical Business Functions</span></div>
+            </div>
+          </div></td></tr>
+        </tbody>
+      </table>
+      <p>Even frontier models fail most of the time on this benchmark.</p>
+      <p>Models perform better on collaboration-oriented domains like Email, Teams, and Drive, but performance drops sharply on more policy-governed domains like ITSM, HRM, and Hybrid workflows. That makes sense. Collaboration tasks often involve simpler user intent and fewer high-stakes constraints. ITSM, HRM, and CSM workflows require more process compliance, access control, state transitions, and correct entity resolution.</p>
+      <p>This suggests the bottleneck is not just language understanding. It is enterprise reasoning rigor.</p>
+      <blockquote>
+        <p style="margin-bottom:0;">"Not only what the user wants, but also what the system allows, what must happen before what, what state the workflow is currently in, and when the safest action is to stop."</p>
+      </blockquote>
+
+      <h2 id="compounding-errors">Small Errors Compound in Enterprise Workflows</h2>
+      <p>If an agent chooses the wrong ID early in the workflow, every downstream action may be attached to the wrong object. If it misses a prerequisite lookup, it may create an erroneous action. If it skips a policy-triggered state transition, the workflow may look complete from the agent's perspective but fail verification.</p>
+      <p>This is very similar to how humans struggle when learning enterprise systems. A new employee does not become effective only by knowing what buttons exist. They become effective by understanding the process, the dependencies, the exceptions, and the hidden "why" behind each step.</p>
+      <p>I think agents will need a similar learning path &mdash; something closer to on-the-job training: safe mock environments, RL-style gyms, synthetic workflows, and sandboxed simulations where they can practice the same tasks repeatedly without affecting real business operations.</p>
+      <p>Benchmarks like EnterpriseOps-Gym do not just measure performance &mdash; they contribute a critical piece for creating a training ground for enterprise agents.</p>
+
+      <h2 id="strategic-planning">Strategic Planning is a Critical Bottleneck</h2>
+      <p>Tool discovery and tool use, in isolation, do not seem to be the primary limitation &mdash; model performance remains relatively stable even when distractor tools are introduced. However, when models are provided with human-authored plans, performance improves by <strong>14&ndash;35 percentage points</strong>, suggesting that many models can execute steps reasonably well once the correct plan is specified.</p>
+      <p>Rather than selecting the next tool call in isolation, enterprise agents must reason over the broader workflow structure &mdash; including the correct sequence of operations, prerequisite conditions, policy or permission conflicts, and potential side effects before modifying enterprise systems.</p>
+      <p>This points to a central capability for enterprise agency: the generation of constraint-aware plans that achieve user objectives while preserving governance, system integrity, and operational reliability.</p>
+
+      <h2 id="my-ideas">My Ideas</h2>
+      <p>One idea I kept thinking about while reading this paper is a learning path for a new employee. A new employee follows SOPs, policies, and supervisor instructions to execute tasks in these domains. They become effective from experience and "on-the-job-learning".</p>
+      <p>This brings me to two broader ideas for enterprise agents:</p>
+
+      <h3>1. Enterprise Agent design innovation to capture real value</h3>
+      <p>We should not expect LLMs to handle every part of an enterprise workflow through pure reasoning. Agents follow workflows &mdash; ones that are explicitly stated with each prompt and create some of their own implicitly. This ad-hoc approach offers flexibility but at the cost of errors, harmful actions and non-adherence to enterprise policies.</p>
+      <div class="bp-callout">
+        <div class="bp-callout__title"><div class="bp-callout__title-main">The question is:</div></div>
+        <div class="bp-callout__body">
+          <p>Do ITSM, HRM, CSM require novelty in approach every time a task is triggered?</p>
+          <p>The answer is No.</p>
+        </div>
+      </div>
+      <p>A workflow design encoding expert SOPs and policies into structured plans and pre-designed execution graphs for the LLMs can be the key to success. This approach uses LLM agents' existing strength of accurate execution rather than complete autonomy.</p>
+      <p><strong>Balancing cognitive and non-cognitive components.</strong> LLMs can reason about intent, constraints, exceptions, and high-level planning. But deterministic components should handle validation, formatting, state checks, schema compliance, and intermediate output structure. For example, if one step produces an output that must be consumed by the next step, a Python script, validator, schema checker, or workflow engine can enforce that the intermediate state is correct before the next action runs. This reduces hallucinated outputs, prevents invalid transitions, and makes the agent more reliable across long workflows.</p>
+
+      <h3>2. RL Environments closing the gap of "On-the-job-learning" for agents</h3>
+      <p>Agents learning constraint-aware planning the same way human workers build it &mdash; through experience: trial and error in a consequence-free environment. Safe mock environments, RL-style gyms, synthetic workflows, and sandboxed simulations where they can practice the same tasks repeatedly without affecting real business operations.</p>
+      <p>One valuable aspect of such environments for model training will be human trajectories that encode practical workflow knowledge. A useful future direction would be to compare human worker trajectories and AI agent trajectories more deeply. For the same task: number of execution steps, compliance checks performed, prerequisite lookups, post-maintenance / cleanup steps, etc.</p>
+      <p>This kind of analysis could help us understand whether AI agents are simply imitating human workflows, finding better workflows, or taking shortcuts that look efficient but create risk.</p>
+      <p>Finally, replicating existing human-native workflows for agents is one path &mdash; but a more effective path will be to redesign enterprise workflows to be AI-ready: structured, more explicit, more verifiable, more constrained by design, with human oversight and continuous observability.</p>
+      <p>In practice, enterprises will need better agents, but they will also need better workflow infrastructure around those agents.</p>
+
+      <h2 id="conclusion">Conclusion</h2>
+      <p>Enterprise agents will not become reliable just because models get better at calling tools. They need constraint-aware planning, stateful execution, policy understanding, safe refusal, and workflow designs that reduce the chance of compounding errors.</p>
+      <p>For me, the most important pillar is <strong>constraint-aware plan generation</strong>. If the plan is wrong, execution quality can only help so much. But if the plan is right, even smaller models may be able to execute effectively with the right system support.</p>
+      <p>This shifts how I think about enterprise AI adoption.</p>
+      <hr class="bp-rule">
+      <p>Explore more: <a href="https://enterpriseops-gym.github.io/" target="_blank" rel="noopener noreferrer">EnterpriseOps-Gym</a></p>
+      <p class="bp-disclaimer">Disclaimer: This post reflects my own personal observations and opinions, not those of any employer, partner, or affiliated organization. Benchmark numbers, rankings, and model names are referenced for informational and discussion purposes only, may contain errors, and may not reflect current or production model performance. Nothing here should be read as an official evaluation, endorsement, or criticism of any company or product.</p>
+`
+  },
+  {
+    title: 'My notes on Rubrics as Rewards: Teaching Models to Learn When There\'s No Right Answer',
+    date: 'Jul 2026',
+    type: 'Blog',
+    thumbColor: '#1a2030',
+    heroColor: '#1a2030',
+    heroImage: 'abstract.png',
+    heroFilter: 'hue-rotate(148deg)',
+    authors: [{ initials: 'AA', name: 'Anshool Agarwal', img: null }],
+    toc: [
+      { id: 'the-paper', text: 'The Paper' },
+      { id: 'papers-focus', text: "Paper's Focus" },
+      { id: 'main-findings', text: 'Main Findings' },
+      { id: 'my-ideas', text: 'My Ideas' },
+      { id: 'conclusion', text: 'Conclusion' },
+    ],
+    body: `
+      <p>RL training in 2025 was all about verifiable rewards and reasoning models. Let's hear from the field itself:</p>
+      <div class="bp-callout">
+        <div class="bp-callout__title"><div class="bp-callout__title-main">From the model builders themselves:</div></div>
+        <div class="bp-callout__body">
+          <p><strong>DeepSeek-R1 era (January 2025):</strong> &lsquo;Reinforcement learning with verifiable rewards has proven effective for complex reasoning tasks such as math and coding.&rsquo;</p>
+          <p><strong>OpenAI on the o-series:</strong> &lsquo;These models are trained to spend more time thinking through problems before they respond, much like a person would.&rsquo;</p>
+        </div>
+      </div>
+      <p>So as every major lab raced to train reasoning models with RL, a familiar ceiling showed up. The math and code benchmarks got saturated. Other real-world domain benchmarks like HealthBench and GPQA-Diamond are not. And neither are most of the domains that actually matter in production: medicine, law, scientific reasoning, clinical documentation. The problem is not the model. The problem is the reward signal. When you cannot write a test case that checks whether a diagnosis is correct, how do you train?</p>
+      <p>That was the question Gunjal et al. from Scale AI asked in <strong>Rubrics as Rewards (RaR)</strong>. Their answer: decompose fuzzy quality into explicit, checkable criteria. RLVR-shaped reward for RLHF-shaped problems.</p>
+      <figure style="margin:32px 0;">
+        <img src="RaR_Image1.png" alt="RaR: RLVR-shaped reward for RLHF-shaped problems" style="max-width:836px;width:100%;display:block;margin:0 auto;border-radius:8px;">
+      </figure>
+      <p>The researchers trained Qwen2.5-7B on two datasets: RaR-Medicine (20k medical reasoning prompts) and RaR-Science (roughly 20k prompts aligned with GPQA-Diamond categories). For each training example, they generated an instance-specific rubric using stronger models (o3-mini and GPT-4o), conditioned on reference answers as a proxy for expert supervision. The policy was trained with GRPO, using an LLM judge to score completions against the rubric. Evaluated on HealthBench (5,000 clinical conversations with physician-authored rubrics) and GPQA-Diamond (550 graduate-level multiple-choice questions).</p>
+      <p>The challenge was this: there is no test suite for &ldquo;was this medical advice correct.&rdquo; Without structure, the judge&rsquo;s number is noise. Think of asking a junior doctor to grade exam answers 1&ndash;10 with no rubric. You get their bias and half-baked knowledge with no verification. Give them a rubric, and you get a grade.</p>
+      <table>
+        <thead><tr><th style="width:28%">Method</th><th>How it works</th></tr></thead>
+        <tbody>
+          <tr class="rank-row" style="cursor:pointer" data-target="rar-d-rlvr" onclick="this.classList.toggle('is-open');document.getElementById(this.dataset.target).hidden=!this.classList.contains('is-open')">
+            <td><strong>RLVR</strong><span class="rank-chevron">&rsaquo;</span></td>
+            <td>&ldquo;Did the code pass the test?&rdquo; &rarr; Yes / No</td>
+          </tr>
+          <tr id="rar-d-rlvr" hidden>
+            <td colspan="2" style="padding:0;border-bottom:1px solid rgba(0,0,0,.08);">
+              <div style="padding:12px 0 16px 20px;color:rgba(0,0,0,.6);font:400 13px/1.55 var(--sans);">Deterministic checks. Pass/fail signal from unit tests, code execution, or regex match. No model judge required. Works only when ground truth is computable.</div>
+            </td>
+          </tr>
+          <tr class="rank-row" style="cursor:pointer" data-target="rar-d-rar" onclick="this.classList.toggle('is-open');document.getElementById(this.dataset.target).hidden=!this.classList.contains('is-open')">
+            <td><strong>RaR</strong><span class="rank-chevron">&rsaquo;</span></td>
+            <td>&ldquo;Was this good?&rdquo; &rarr; Rubric criteria &rarr; Structured score</td>
+          </tr>
+          <tr id="rar-d-rar" hidden>
+            <td colspan="2" style="padding:0;border-bottom:1px solid rgba(0,0,0,.08);">
+              <div style="padding:12px 0 16px 20px;color:rgba(0,0,0,.6);font:400 13px/1.55 var(--sans);">Non-deterministic but structured. An LLM judge scores output against explicit rubric criteria — signal quality depends on rubric clarity and reference answer grounding.</div>
+            </td>
+          </tr>
+          <tr class="rank-row" style="cursor:pointer" data-target="rar-d-likert" onclick="this.classList.toggle('is-open');document.getElementById(this.dataset.target).hidden=!this.classList.contains('is-open')">
+            <td><strong>Likert</strong><span class="rank-chevron">&rsaquo;</span></td>
+            <td>&ldquo;Was this good?&rdquo; &rarr; Rating 1&ndash;10 (no rubric)</td>
+          </tr>
+          <tr id="rar-d-likert" hidden>
+            <td colspan="2" style="padding:0;border-bottom:1px solid rgba(0,0,0,.08);">
+              <div style="padding:12px 0 16px 20px;color:rgba(0,0,0,.6);font:400 13px/1.55 var(--sans);">Non-deterministic, unstructured. Judge rates 1&ndash;10 with no rubric &mdash; high variance, weak gradient signal, conflates writing style with reasoning correctness.</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="papers-focus">Paper's Focus</h2>
+      <ol>
+        <li>Instance-specific rubric generation from reference answers</li>
+        <li>Explicit aggregation (normalized weighted sum across criteria)</li>
+        <li>Implicit aggregation (delegated holistic scoring by an LLM judge)</li>
+        <li>Policy training via GRPO on open-ended domains</li>
+        <li>LLM judge alignment across model sizes (7B to 70B+)</li>
+        <li>Sensitivity to reference answer quality and expert grounding</li>
+        <li>Transfer from rubric-based evals to verifiable MCQ benchmarks</li>
+        <li>Impact of pitfall criteria and categorical importance weights</li>
+      </ol>
+      <p>RaR did not only ask, &lsquo;did the model score well on a rubric?&rsquo; It asked, &lsquo;do rubrics as a reward signal produce a policy that generalizes: to MCQ, to held-out domains, to judge topics the model was never trained against?&rsquo; That distinction is important.</p>
+      <figure style="margin:32px 0;">
+        <img src="RaR_Image2.png" alt="RaR Paper's Focus diagram" style="max-width:742px;width:100%;display:block;margin:0 auto;border-radius:8px;">
+      </figure>
+
+      <h2 id="main-findings">Main Findings</h2>
+      <p class="pullquote">RaR-Implicit achieved 31% relative improvement on HealthBench and 7% on GPQA-Diamond over direct Likert scoring.</p>
+      <p>That was not a marginal gain. HealthBench is hard: physician-authored rubrics across completeness, safety, accuracy, context awareness, and communication quality. The base model scored 22.7%. Reference-Likert reached 31.7%. RaR-Implicit: 35.0%. And those gains transferred to GPQA-Diamond, which the model was not trained on. The rubric-induced skills generalized.</p>
+      <p>That makes sense. A rubric forces the judge to evaluate specific properties rather than form a holistic impression. Holistic impressions are noisy: they conflate good writing with correct reasoning, or reflect the judge&rsquo;s priors about length and formatting. A rubric disaggregates the signal. And disaggregated signal is more informative for GRPO, which only cares about relative advantage within a group. If every completion in a group scores well on &ldquo;is politely written,&rdquo; that criterion cancels out. But if completions vary on &ldquo;correctly identifies the root cause,&rdquo; that variation drives the gradient. Rubrics surface the dimensions that actually discriminate.</p>
+      <p><strong>Implicit beats explicit.</strong> RaR had two aggregation variants. Explicit: each rubric criterion was scored independently, and a normalized weighted sum produced the final reward (Essential 1.0, Pitfall 0.9, Important 0.7, Optional 0.3). Implicit: all criteria were passed to the judge at once, returning a single holistic Likert score. RaR-Implicit won. Manual weights introduce brittleness. The weight for &ldquo;Important&rdquo; being 0.7 is a guess, and the guess compounds across every criterion in every rubric across 20k training examples. Delegating aggregation to an LLM trained on human feedback is trusting it to do something it was trained to do, rather than overriding it with a fixed formula.</p>
+      <p><strong>Rubrics let small judges close the gap to large judges.</strong> Without rubrics, small models failed badly at distinguishing subtle quality differences. With rubrics, they closed most of the gap to larger models. A smaller model asked to rate 1&ndash;10 is guessing what &ldquo;good&rdquo; looks like. The same model handed a rubric is checking against an explicit list. Checking is easier than guessing, regardless of raw capability. This is the most practically significant finding in the paper. Rubrics are a cost lever: if a small, cheap judge with a rubric matches a large, expensive one, you can run reward scoring at scale without large-model inference costs.</p>
+
+      <h2 id="my-ideas">My Ideas</h2>
+      <p>One idea I kept thinking about while reading this paper is the professor handing a rubric to a TA. The professor&rsquo;s judgment, built from years of reading and evaluating student work, gets encoded into a checklist. The TA, who does not have that expertise, applies the checklist and produces grades that are nearly as good. The rubric is a form of knowledge transfer: expert judgment, encoded once, distributed at scale. That is exactly what RaR is doing. And it points to two directions I think are worth building toward.</p>
+      <p><strong>1. Rubrics as a Product Asset for Vertical AI.</strong> The standard workflow for building a domain-specific AI product today: collect preference data, train a reward model, fine-tune. This workflow is slow and brittle because the reward model is opaque. You cannot inspect it, audit it, version it, or hand it to a new team. RaR suggests a different workflow: collect high-quality reference answers from domain experts, generate instance-specific rubrics from those references, use the rubrics as the reward signal. The rubric set becomes an artifact &mdash; inspectable, versionable, improvable. A medical AI product built this way has an auditable training signal. If a rubric criterion is wrong, you fix it. If a new failure mode appears in deployment, you add a pitfall criterion.</p>
+      <div class="bp-callout">
+        <div class="bp-callout__title"><div class="bp-callout__title-main">The economics also shift:</div></div>
+        <div class="bp-callout__body">
+          <p>Getting a cardiologist to review and refine 100 rubrics is a different commitment than labeling 10,000 pairwise comparisons, and it produces something you can actually explain to a regulator.</p>
+        </div>
+      </div>
+      <p><strong>2. The Reference Answer Is the Bottleneck, Not the Model.</strong> The most important table in the paper compared rubric variants: synthetic rubrics with reference answers achieved 35.9% on HealthBench. Without reference answers: 32.0%. Human-authored rubrics: 34.8%. Reference-grounded synthetic rubrics actually beat human-authored ones. But strip the reference answers, and performance drops 3.9 points. This reframes where effort should go when building open-ended RL pipelines. Model architecture matters less than you think. Optimization algorithm matters less. What matters most is whether you have high-quality reference answers to ground the rubric generation. For any team trying to apply RaR to a new domain, the first question is not &ldquo;which base model?&rdquo; It is &ldquo;do we have expert-authored reference answers?&rdquo;</p>
+
+      <h2 id="conclusion">Conclusion</h2>
+      <p class="pullquote">This paper shifts how I think about AI in high-stakes domains. The bottleneck is not the model. It is the quality of the knowledge you encode before training begins.</p>
+      <p>The real significance of RaR is not the benchmark numbers. It is what the technique unlocks. Most of the economy runs on open-ended work: diagnosis, legal analysis, financial advisory, scientific review, customer resolution. None of these has a test case, so RLVR could never reach them, and preference-based reward models proved too noisy and too opaque to trust in high-stakes settings. Rubrics as rewards give these domains a training methodology: encode expert judgment once, then use it as a scalable, auditable reward signal. That is the bridge from reasoning models that win math olympiads to models that can actually be trained for the work enterprises pay for. Real-world adoption of AI was never blocked on reasoning capability. It was blocked in the absence of a reward signal for domains where quality is multi-criteria, and RaR is the first credible answer to that.</p>
+      <p>On future scope, the authors name their own next steps: validating beyond medicine and science into dialogue, tool use, and agentic tasks, and replacing fixed categorical weights with learned or dynamic weighting that mimics a curriculum, prioritizing correctness early and subtler qualities like style and safety later. I would extend that in two directions. First, rubrics for process, not just outcomes: agentic tasks fail mid-trajectory, and step-level rubric criteria could bring RaR&rsquo;s structure to long-horizon workflows where the final state alone cannot tell you what went wrong. Second, the supply chain for expert judgment: if reference answers bound rubric quality, then the scarce asset in the next phase of RL training is not compute or data volume. It is codified expert knowledge, and the pipelines that turn practitioners&rsquo; judgment into reusable, versioned rubric sets.</p>
+      <hr class="bp-rule">
+      <p>Full paper: <a href="https://arxiv.org/abs/2507.17746" target="_blank" rel="noopener noreferrer">Rubrics as Rewards (arXiv)</a></p>
+      <p class="bp-disclaimer">Disclaimer: This post reflects my own personal observations and opinions, not those of any employer, partner, or affiliated organization. Paper findings, benchmark numbers, and model names are referenced for informational and discussion purposes only, may contain errors, and may not reflect current or production model performance. Nothing here should be read as an official evaluation, endorsement, or criticism of any company or product.</p>
+`
+  }
+];
+
+/* ══════════════════════════════════════
+   ROUTER
+══════════════════════════════════════ */
+// Experience page — "Experience" card opens a journey timeline; the other
+// two cards (Self Initiatives, Achievements) don't have copy yet.
+const EXPERIENCE_JOURNEY = [
+  {
+    logoAlt: 'Deccan AI',
+    photo: 'deccan_exp.jpg',
+    company: 'DeccanAI',
+    role: 'GTM — AI Model Training unit',
+    dates: 'Dec 2025 : Present',
+    tags: ['Technical Presales', 'GTM Strategy', 'Solution Scoping', 'AI/ML', 'Sales Enablement', 'Frontier-Model Training'],
+    intro: 'I sit between client discovery, technical solutioning, research translation, and GTM execution for AI labs and enterprise clients across our practice areas — Coding, Agentic AI/RL, Robotics, Multimodal, and Linguistic AI.',
+    tabs: {
+      Overview: `
+        <p><em>I'm the technical translator in the deal, turning dense model-training and evaluation requirements into something a client, an AE, and a researcher can all act on.</em></p>
+        <p class="jrn-subhead">Impact</p>
+        <ul>
+          <li>Cut client response time from 5–7 days to under 36 hours.</li>
+          <li>Designed a benchmarking asset that scores proprietary data samples against frontier models, giving sales a standing quality signal before pilots.</li>
+          <li>Drove GTM motions for MAG 7 clients across the US, Europe, Middle-east and APAC.</li>
+          <li>Recognized as Deccan Dynamite / Outstanding Performer within four months.</li>
+        </ul>`,
+      Responsibilities: `
+        <ul>
+          <li>Shape POCs and technical direction by surfacing customer pain points, workflow gaps, and project nuances upstream to research teams, keeping internal effort pointed at the highest-impact problems.</li>
+          <li>Own discovery-to-production client conversion for AI labs and enterprises, translating requirements into scoped AI solutions alongside ML researchers and delivery teams.</li>
+          <li>Identify upsell and cross-sell opportunities by mapping client journeys, future requirements, and project-level technical detail to DeccanAI's delivery capabilities.</li>
+          <li>Bring technical rigor to GTM through customer-facing collateral, outbound strategy, technical learning sessions, and enablement that helped AEs and SDRs become fluent without needing deep technical depth.</li>
+        </ul>`
+    }
+  },
+  {
+    logoAlt: 'Maruti Suzuki',
+    photo: 'maruti_exp.jpg',
+    company: 'Maruti Suzuki India Limited',
+    role: "Digital Transformation Analyst, CIO's Office",
+    dates: 'May 2024 : Nov 2025',
+    tags: ['Enterprise AI Strategy', 'Digital Transformation', 'AI Governance', 'Solution Deployment', 'Stakeholder Management'],
+    intro: 'I sat in the CIO\'s office driving enterprise-wide AI strategy, translating business-vertical priorities into deployed AI use-cases and the frameworks, partnerships, and governance to scale them across the organization.',
+    tabs: {
+      Overview: `
+        <p><em>I bridged between business, technology, and legacy teams, implementing AI solutions by focusing on innovation, ROI, and governance.</em></p>
+        <p class="jrn-subhead">Impact</p>
+        <ul>
+          <li>Cut engine-inspection defect rate from 20% to 2% with an AI-embedded inspection system.</li>
+          <li>Led digitalization of MSIL's Insurance Policy Management System, protecting ₹20,000 Cr in assets.</li>
+          <li>Reduced defective parts supply 15% via a predictive-maintenance Tool Health Monitoring System.</li>
+          <li>Maintained global tech partnerships — Google, NVIDIA, AWS, etc.</li>
+        </ul>`,
+      Responsibilities: `
+        <ul>
+          <li>Devised enterprise AI strategy directly with business-vertical heads, mapping where AI could move the P&amp;L and prioritizing use-cases against strategic business priorities.</li>
+          <li>Owned end-to-end AI solutioning including post-deployment change management and maintenance. Domains: Procurement (SAP Ariba), Insurance, Sustainability Compliance (BRSR), and Machinery Maintainence.</li>
+          <li>Owned integration across business, technology, and legacy teams, balancing innovation against ROI and governance so AI-led solutions actually shipped.</li>
+          <li>Built the governance and partnership layer of responsible-AI practices and Suzuki global group tech alliances with Google, NVIDIA, AWS, leading to scaling AI safely across verticals.</li>
+        </ul>`
+    }
+  },
+  {
+    logoAlt: 'Motilal Oswal Financial Services',
+    company: 'Motilal Oswal Financial Services Limited',
+    role: 'Intern — Investment Banking',
+    dates: 'May 2023 : Sep 2023',
+    tags: ['Investment Banking', 'M&amp;A Research', 'Deal Sourcing', 'BFSI', 'Financial Analysis', 'Pitch Decks'],
+    tabs: {
+      Responsibilities: `
+        <ul>
+          <li>Conducted M&amp;A research, opportunity screening, and deal sourcing for BFSI clients and live private deals.</li>
+          <li>Prepared company profiles, performance snapshots, investor decks, and pitch materials for lead analysts.</li>
+          <li>Tracked sector developments, funding activity, PE transactions, and capital market signals across the BFSI landscape.</li>
+        </ul>`,
+      'Impact / Projects': `
+        <ul>
+          <li>Analyzed 200+ BFSI firms and PE transactions.</li>
+          <li>Built pitch materials for NSDL, RK Swamy, and other live private deals.</li>
+          <li>Independently identified two actionable signals: GetVantage's Series A round and MAS Financial Services' QIP opportunity.</li>
+        </ul>`
+    }
+  },
+  {
+    logoAlt: 'Ajanta Pharma',
+    company: 'Ajanta Pharma Limited',
+    role: 'Intern — Digital Transformation',
+    dates: 'May 2022 : Jul 2022',
+    tags: ['Python', 'Automation', 'Data Processing', 'Pharma'],
+    tabs: {
+      Responsibilities: `
+        <ul>
+          <li>Built a Python-based Automated Data Processing Engine to replace manual monthly sales-data processing and report generation.</li>
+          <li>Owned development end-to-end, incorporating mentor guidance and stakeholder inputs to complete the tool.</li>
+          <li>Explored corporate finance workflows and identified opportunities to use automation for recurring analysis and reporting tasks.</li>
+        </ul>`,
+      'Impact / Projects': `
+        <ul>
+          <li>Automated monthly sales-data processing and report generation, eliminating a recurring manual workflow.</li>
+          <li>Built an engine to analyze reconciled tax rates of pharma companies and compare cost components across the sector.</li>
+          <li>Used financial analysis and automation to identify areas where cost structures could be better understood and optimized.</li>
+        </ul>`
+    }
+  }
+];
+
+function logoSrcFor(alt) {
+  const img = document.querySelector(`#real-world-experience img[alt="${alt}"]`);
+  return img ? img.getAttribute('src') : '';
+}
+
+function renderJourneyHTML() {
+  const items = EXPERIENCE_JOURNEY.map((item, idx) => {
+    const tabNames = Object.keys(item.tabs);
+    const tabsHTML = tabNames.map((name, i) =>
+      `<button class="jrn-tab${i === 0 ? ' is-active' : ''}" data-idx="${idx}" data-tab="${name}">${name}</button>`
+    ).join('');
+    const tagsHTML = item.tags.map(t => `<span class="jrn-tag">${t}</span>`).join('');
+    const mediaHTML = item.photo
+      ? `<div class="jrn-media has-photo">
+          <img class="jrn-photo" src="${item.photo}" alt="${item.company}">
+        </div>`
+      : `<div class="jrn-media"><img src="${logoSrcFor(item.logoAlt)}" alt="${item.company}"></div>`;
+    return `
+      <div class="jrn-item">
+        <div class="jrn-rail"></div>
+        <div class="jrn-dot"></div>
+        ${mediaHTML}
+        <div class="jrn-content">
+          <p class="jrn-company">${item.company}</p>
+          <p class="jrn-role">${item.role}</p>
+          <p class="jrn-dates">${item.dates}</p>
+          <div class="jrn-tags">${tagsHTML}</div>
+          ${item.intro ? `<p class="jrn-intro">${item.intro}</p>` : ''}
+          <div class="jrn-tabs">${tabsHTML}</div>
+          <div class="jrn-panel" data-idx="${idx}">${item.tabs[tabNames[0]]}</div>
+        </div>
+      </div>`;
+  }).join('');
+  return `<div class="jrn">${items}</div>`;
+}
+
+function initJourneyInteractions(container) {
+  container.querySelectorAll('.jrn-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = +btn.dataset.idx;
+      const tabName = btn.dataset.tab;
+      const item = EXPERIENCE_JOURNEY[idx];
+      const itemEl = btn.closest('.jrn-item');
+      itemEl.querySelectorAll('.jrn-tab').forEach(b => b.classList.toggle('is-active', b === btn));
+      const panel = itemEl.querySelector('.jrn-panel');
+      panel.style.opacity = 0;
+      setTimeout(() => {
+        panel.innerHTML = item.tabs[tabName];
+        panel.style.opacity = 1;
+      }, 160);
+    });
+  });
+  const jrnItems = container.querySelectorAll('.jrn-item');
+  /* scroll-dimming: item whose center is closest to viewport mid gets .is-active */
+  const updateActive = () => {
+    const mid = window.scrollY + window.innerHeight * 0.5;
+    let closest = jrnItems[0], closestDist = Infinity;
+    jrnItems.forEach(el => {
+      const dist = Math.abs(el.getBoundingClientRect().top + window.scrollY + el.offsetHeight * 0.5 - mid);
+      if (dist < closestDist) { closestDist = dist; closest = el; }
+    });
+    jrnItems.forEach(el => el.classList.toggle('is-active', el === closest));
+  };
+  window.addEventListener('scroll', updateActive, { passive: true });
+  updateActive();
+}
+
+const INITIATIVES = [
+  {
+    title: 'Chefront',
+    association: 'Founder · 2023–24',
+    description: 'An impact food-tech venture giving women home chefs from underserved communities stable income and the digital tools to run a real kitchen business.',
+    tags: ['Founder', 'Food-tech', 'Impact Venture', '0→1'],
+    color: '#1a2e24',
+    back: [
+      'Built a fully managed tech stack for end-to-end kitchen operations.',
+      'Served 65+ customers across 12 regions in Gurgaon.',
+      'Created chef livelihoods while solving daily meals for students and the working class.'
+    ]
+  },
+  {
+    title: 'AI Business Initiative Circle',
+    association: 'Founder · Maruti Suzuki · 2024–25',
+    description: 'An employee-led circle that gives the whole org a way to learn, pitch, and ship AI ideas.',
+    tags: ['Founder', 'AI Enablement', 'Innovation Programs'],
+    color: '#0d2137',
+    back: [
+      'stratAIze — innovation challenges and sessions to spark creative problem-solving.',
+      'AI.deas Daily — a forum that demystifies AI/GenAI for non-technical staff.',
+      'AI Ideathon — flagship challenge: mentorship and tools to turn ideas into business impact.'
+    ]
+  },
+  {
+    title: 'Rotaract Club of New Delhi',
+    association: 'Member · Community & Fundraising',
+    description: 'Active across community service, fundraising, literacy drives, and youth exchange.',
+    tags: ['Community Service', 'Fundraising', 'Youth Leadership'],
+    color: '#2a2040',
+    back: [
+      'Raised ₹1L+ for CanKids KidsCan (Jalsa 8.0 charity Dandiya).',
+      'Raised ₹61K for UDAI, supporting specially-abled children (Bandhan 6.0).',
+      'Represented Delhi District at the Payana Youth Exchange, Bangalore 2024.'
+    ]
+  }
+];
+
+const INITIATIVES_TABLE = [
+  {
+    name: 'Learn@Work',
+    category: 'Organizational Learning',
+    role: 'Presented “Learn@Work: Building a Culture of Continuous Growth at Organization” in a Harvard University–affiliated session.',
+    focus: 'Continuous learning, workplace growth, capability-building'
+  },
+  {
+    name: 'MSIL Sustainability Fellow',
+    category: 'Sustainability',
+    role: 'Contributed to MSIL’s work in the SMC Global Carbon Net Zero Committee.',
+    focus: 'Carbon neutrality, BRSR, ESG'
+  },
+  {
+    name: 'Anti-Tobacco Awareness Initiative',
+    category: 'Public Health',
+    role: 'Participated in a mass-awareness initiative on the health hazards of tobacco and smoking, including a national-level street play.',
+    focus: 'Health awareness, social impact'
+  },
+  {
+    name: 'Maruti Suzuki CSR Community',
+    category: 'CSR Volunteering',
+    role: 'Volunteered across donation drives, environmental campaigns, and grassroots initiatives.',
+    focus: 'Community service, environment, social responsibility'
+  },
+  {
+    name: 'Rotaract Club of New Delhi',
+    category: 'Community & Youth Engagement',
+    role: 'Engaged across community service, vocational service, networking, and professional development initiatives.',
+    focus: 'Service, leadership, youth engagement'
+  },
+  {
+    name: 'Cycle For Earth',
+    category: 'Sustainability Volunteering',
+    role: 'Volunteered for a Rotary-led event promoting sustainable environmental practices.',
+    focus: 'Environment, climate awareness'
+  },
+  {
+    name: 'Dhanak',
+    category: 'Literacy Campaign',
+    role: 'Contributed to literacy campaigns for underprivileged children.',
+    focus: 'Education, child development'
+  },
+  {
+    name: 'Dilli Dekho IDYE',
+    category: 'Youth Exchange',
+    role: 'Served as part of the hosting team for a youth exchange initiative.',
+    focus: 'Cultural exchange, hospitality, collaboration'
+  },
+  {
+    name: 'Project Shanti Ka Mel',
+    category: 'Mental Well-being',
+    role: 'Contributed to a project focused on promoting mental well-being and awareness.',
+    focus: 'Mental health, community support'
+  }
+];
+
+function renderInitiativesTableHTML() {
+  const rows = INITIATIVES_TABLE.map(r => `
+    <tr>
+      <td>${r.name}</td>
+      <td>${r.category}</td>
+      <td>${r.role}</td>
+      <td>${r.focus}</td>
+    </tr>`).join('');
+  return `
+    <div class="init-table-section">
+      <p class="init-table-label">More initiatives</p>
+      <div class="init-table-wrap">
+        <table class="init-table">
+          <thead>
+            <tr><th>Initiative</th><th>Category</th><th>Role / Contribution</th><th>Focus</th></tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+function renderInitiativesHTML() {
+  const cards = INITIATIVES.map(item => {
+    const tagsHTML = item.tags.map(t => `<span class="init-tag">${t}</span>`).join('');
+    const tagsBackHTML = item.tags.map(t => `<span class="init-tag init-tag--dark">${t}</span>`).join('');
+    const backItems = item.back.map(b => `<div class="init-back-item">${b}</div>`).join('');
+    return `
+      <div class="init-card">
+        <div class="init-card-inner">
+          <div class="init-face init-face--front" style="background:${item.color}">
+            <div>
+              <div class="init-accent"></div>
+              <p class="init-eyebrow">${item.association}</p>
+              <p class="init-title">${item.title}</p>
+              <p class="init-desc">${item.description}</p>
+            </div>
+            <div>
+              <div class="init-tags">${tagsHTML}</div>
+            </div>
+          </div>
+          <div class="init-face init-face--back">
+            <p class="init-back-eyebrow">Impact</p>
+            <p class="init-back-title">${item.title}</p>
+            <div class="init-back-list">${backItems}</div>
+            <div class="init-tags" style="margin-top:18px;margin-bottom:0;">${tagsBackHTML}</div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+  return `
+    <p class="exp-detail__role">Self Initiatives</p>
+    <p class="exp-detail__desc" style="margin-bottom:28px;">Ventures and communities I've built or contributed to outside formal work.</p>
+    <div class="init-grid">${cards}</div>
+    ${renderInitiativesTableHTML()}`;
+}
+
+const ACHIEVEMENTS_INTRO = [
+  'Every achievement here carries more names than mine.',
+  'The case-competition wins were built with teammates who stayed up late, challenged ideas, sharpened decks, and carried the work with me. The university ranks were shaped not just by individual effort, but by classmates, group members, and study partners who made the learning deeper and more consistent.',
+  'Some of it belongs to seniors and mentors who opened doors I could not have reached alone, people who let me into rooms I had not earned yet, and nominations that put my work in front of larger audiences. And some belong to colleagues and connections who let me into their stories and shared lessons that deepened my understanding.',
+  'A lot of it belongs to my family, who stood behind me at every step, and to friends who accompanied me through different milestones of this journey.',
+  'The list below is mine on paper. In practice, it belongs to a lot of people.'
+];
+
+const ACHIEVEMENT_CATEGORIES = [
+  {
+    label: 'Selections & Delegations',
+    color: '#0d2137',
+    rows: [
+      { title: 'Selected Delegate', sub: 'HPAIR 2025, Tokyo', details: 'Selected for the Harvard Project for Asian & International Relations, joining a global cohort focused on policy, business, leadership, and international affairs.' },
+      { title: 'Representative', sub: 'iFX Expo 2024, Dubai', details: 'Chosen to represent Progressive Share Brokers at iFX Expo 2024, engaging with the global fintech, trading, and financial-services ecosystem.' },
+      { title: 'Selected Member', sub: 'McKinsey & Company Global Survey Panel', details: 'Invited to contribute perspectives to McKinsey’s global survey panel, participating in research-led conversations on business, markets, and management trends.' }
+    ]
+  },
+  {
+    label: 'Competitions',
+    color: '#2a2040',
+    rows: [
+      { title: '6× National Case-Competition Winner', details: 'Won 6 national case competitions across ~10 finals between 2021–23, competing in strategy, business, finance, operations, and product problem statements hosted by Deloitte, IIM Mumbai, IIT Bombay, XLRI, SCMHRD, and IBM.' },
+      { title: 'National 2nd Runner-Up', sub: 'Maruti Suzuki Xcelerate', details: 'Secured National 2nd Runner-Up in Maruti Suzuki’s flagship B-School case competition, leading to a Pre-Placement Offer and later work in the CIO’s Office.' },
+      { title: 'Winner', sub: 'NSE & SEBI Capital Markets Quiz', details: 'Won a national-level capital markets quiz organized by NSE and SEBI, demonstrating strong understanding of financial markets, regulations, and investment concepts.' }
+    ]
+  },
+  {
+    label: 'Academic & Workplace',
+    color: '#1a2e24',
+    rows: [
+      { title: 'Highest CGPA in University', sub: 'MBA', details: 'Secured the highest CGPA in the university during MBA, reflecting consistency across management, strategy, finance, operations, and business coursework.' },
+      { title: 'Highest CGPA in University', sub: 'B.Tech', details: 'Secured the highest CGPA in the university during B.Tech, reflecting academic consistency across technical and engineering coursework.' },
+      { title: 'Deccan Dynamite / Outstanding Performer', sub: 'DeccanAI', details: 'Recognized within four months at DeccanAI for ownership, speed, RevOps contribution, GTM execution, and cross-functional impact across sales, research, and delivery teams.' }
+    ]
+  },
+  {
+    label: 'Media',
+    color: '#3a2010',
+    rows: [
+      { title: 'Featured in Industry Publication', sub: 'Agentic AI', details: 'Featured for views on Agentic AI and the importance of strong guardrails, covering why autonomy in AI systems needs governance, evaluation, and risk-aware deployment.' }
+    ]
+  }
+];
+
+function renderAchievementsHTML() {
+  const sections = ACHIEVEMENT_CATEGORIES.map(cat => {
+    const rows = cat.rows.map(r => `
+      <div class="ach-entry">
+        <span class="ach-mark-row">
+          <span class="ach-mark" style="background:${cat.color}"></span>
+          <span>
+            <span class="ach-entry__title">${r.title}</span>
+            ${r.sub ? `<span class="ach-entry__sub">${r.sub}</span>` : ''}
+          </span>
+        </span>
+        <p class="ach-entry__desc">${r.details}</p>
+      </div>`).join('');
+    return `
+      <div class="ach-table-section">
+        <p class="ach-table-label">${cat.label}</p>
+        <div class="ach-entries">${rows}</div>
+      </div>`;
+  }).join('');
+  const introHTML = ACHIEVEMENTS_INTRO.map(p => `<p class="ach-intro">${p}</p>`).join('');
+  return `
+    <h1 class="ach-title">It's a Shared Credit</h1>
+    ${introHTML}
+    ${sections}`;
+}
+
+function showExpDetail(idx) {
+  document.querySelectorAll('#pg-experience .rp-feat-card').forEach((el, i) => {
+    el.classList.toggle('is-active', i === idx);
+  });
+  const panelWrap = document.getElementById('exp-detail');
+  panelWrap.hidden = false;
+  if (idx === 0) {
+    panelWrap.innerHTML = renderJourneyHTML();
+    initJourneyInteractions(panelWrap);
+    /* equalize tab panel heights — deferred so fonts/layout are settled */
+    setTimeout(() => {
+      panelWrap.querySelectorAll('.jrn-item').forEach((itemEl, idx) => {
+        const item = EXPERIENCE_JOURNEY[idx];
+        if (!item) return;
+        const panel = itemEl.querySelector('.jrn-panel');
+        const tabNames = Object.keys(item.tabs);
+        if (tabNames.length < 2) return;
+        const clone = panel.cloneNode(false);
+        clone.style.cssText = 'position:absolute;visibility:hidden;pointer-events:none;width:' + panel.offsetWidth + 'px;';
+        document.body.appendChild(clone);
+        let maxH = 0;
+        tabNames.forEach(name => { clone.innerHTML = item.tabs[name]; if (clone.scrollHeight > maxH) maxH = clone.scrollHeight; });
+        document.body.removeChild(clone);
+        panel.style.minHeight = maxH + 'px';
+      });
+    }, 150);
+  } else if (idx === 1) {
+    panelWrap.innerHTML = renderInitiativesHTML();
+  } else if (idx === 2) {
+    panelWrap.innerHTML = renderAchievementsHTML();
+  } else {
+    const labels = ['Experience', 'Self Initiatives', 'Achievements'];
+    panelWrap.innerHTML = `<p class="exp-detail__role">${labels[idx]}</p><p class="exp-detail__desc">Description coming soon.</p>`;
+  }
+}
+
+const router = {
+  pages: {},
+  current: 'home',
+
+  init() {
+    this.pages = {
+      home:       document.getElementById('pg-home'),
+      research:   document.getElementById('pg-research'),
+      blog:       document.getElementById('pg-blog'),
+      experience: document.getElementById('pg-experience'),
+      education:  document.getElementById('pg-education'),
+      contact:    document.getElementById('pg-contact'),
+    };
+    document.getElementById('bp-back').addEventListener('click', () => this.show('research'));
+    // Nav links — Experience, Education, Research Blogs
+    const navLinks = document.querySelectorAll('.nav__links a');
+    navLinks[0].addEventListener('click', e => { e.preventDefault(); this.show('experience'); });
+    navLinks[1].addEventListener('click', e => { e.preventDefault(); this.show('education'); });
+    navLinks[2].addEventListener('click', e => { e.preventDefault(); this.show('research'); });
+    // Contact button (nav CTA)
+    document.querySelector('.nav__ctas .btn--ghost').addEventListener('click', e => { e.preventDefault(); this.show('contact'); });
+    // Logo
+    document.querySelector('.nav__logo').addEventListener('click', e => { e.preventDefault(); this.show('home'); });
+    this.renderBlogList();
+    this.renderHomeBlogGrid();
+    this.initEditorialAnimation();
+  },
+
+  show(page) {
+    Object.entries(this.pages).forEach(([k,el]) => { el.hidden = (k !== page); });
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    this.current = page;
+    if (page === 'research') this.renderBlogList();
+    if (page === 'experience') showExpDetail(0);
+    // Update active nav link underline
+    const navLinks = document.querySelectorAll('.nav__links a');
+    navLinks.forEach(a => a.classList.remove('nav-active'));
+    if (page === 'experience') navLinks[0].classList.add('nav-active');
+    if (page === 'education') navLinks[1].classList.add('nav-active');
+    if (page === 'research' || page === 'blog') navLinks[2].classList.add('nav-active');
+  },
+
+  openPost(idx) {
+    const post = BLOGS[idx];
+    if (!post) return;
+
+    // Hero
+    const heroWrap = document.getElementById('bp-hero-wrap');
+    heroWrap.innerHTML = post.heroImage
+      ? `<img class="bp-hero" src="${post.heroImage}" alt=""${post.heroFilter ? ` style="filter:${post.heroFilter}"` : ''}>`
+      : `<div class="bp-hero-ph" style="background:${post.heroColor || '#1a2e24'}"></div>`;
+
+    // Eyebrow
+    const ey = document.getElementById('bp-eyebrow');
+    ey.innerHTML = `<span class="bp-eyebrow-dot"></span> ${post.type} &middot; ${post.date}`;
+
+    // Title
+    document.getElementById('bp-title').textContent = post.title;
+
+    // Authors
+    const authEl = document.getElementById('bp-authors');
+authEl.innerHTML = post.authors.map(a => `
+      <div class="bp-author">
+        <div class="bp-av">${a.img ? `<img src="${a.img}" alt="${a.name}">` : a.initials}</div>
+        <span class="bp-author-name">${a.name}</span>
+      </div>
+    `).join('');
+
+    // Body
+    const bodyEl = document.getElementById('bp-body');
+    bodyEl.innerHTML = post.body;
+
+    // Scroll-reveal each element as user reads (same as About section)
+    const bodyChildren = Array.from(bodyEl.children);
+    bodyChildren.forEach(el => el.classList.add('pre-reveal'));
+    const readObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('is-visible');
+          e.target.classList.remove('pre-reveal');
+          readObserver.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08 });
+    bodyChildren.forEach(el => readObserver.observe(el));
+    // Safety net: guarantee content becomes visible even if the observer never fires.
+    setTimeout(() => bodyChildren.forEach(el => { el.classList.add('is-visible'); el.classList.remove('pre-reveal'); }), 1500);
+
+    // TOC
+    const tocEl = document.getElementById('bp-toc');
+    if (post.toc && post.toc.length) {
+      tocEl.hidden = false;
+      tocEl.innerHTML = `<p class="bp-toc__label">Contents</p><ul>` +
+        post.toc.map((t, i) => `<li><a href="#${t.id}" data-id="${t.id}"${i === 0 ? ` onclick="event.preventDefault();window.scrollTo({top:0,behavior:'smooth'})"` : ''}>${t.text}</a></li>`).join('') +
+        `</ul>`;
+      // TOC scroll spy
+      this.initTocSpy(post.toc.map(t => t.id));
+    } else {
+      tocEl.hidden = true;
+    }
+
+    // Related
+    const related = BLOGS.filter((_, i) => i !== idx).slice(0, 3);
+    const relOuter = document.getElementById('bp-related-outer');
+    if (related.length) {
+      relOuter.hidden = false;
+      document.getElementById('bp-related').innerHTML = related.map((r, ri) => `
+        <div class="bp-rel-item" onclick="router.openPost(${BLOGS.indexOf(r)})">
+          ${r.heroImage ? `<img class="bp-rel-thumb" src="${r.heroImage}" alt=""${r.heroFilter ? ` style="filter:${r.heroFilter}"` : ''}>` : `<div class="bp-rel-thumb-ph" style="background:${r.thumbColor || '#333'}"></div>`}
+          <div>
+            <p class="bp-rel-title">${r.title}</p>
+            <div class="bp-rel-meta">
+              <div class="bp-rel-av-row">${r.authors.map(a=>`<div class="bp-rel-av">${a.initials}</div>`).join('')}</div>
+              <span class="bp-rel-names">${r.authors.map(a=>a.name).join(', ')}</span>
+              <span class="bp-rel-sep">&middot;</span>
+              <span class="bp-rel-date">${r.date}</span>
+            </div>
+          </div>
+          <span class="bp-rel-cta">Read blog ↗</span>
+        </div>
+      `).join('');
+    } else {
+      relOuter.hidden = true;
+    }
+
+    this.show('blog');
+  },
+
+  initTocSpy(ids) {
+    let activeId = null;
+    const setActive = id => {
+      document.querySelectorAll('.bp-toc a').forEach(a => a.classList.remove('active'));
+      const link = id ? document.querySelector(`.bp-toc a[data-id="${id}"]`) : null;
+      if (link) link.classList.add('active');
+      activeId = id;
+    };
+    const onScroll = () => {
+      const threshold = window.scrollY + window.innerHeight * 0.18;
+      let current = ids[0];
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top + window.scrollY <= threshold) current = id;
+      }
+      if (current !== activeId) setActive(current);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  },
+
+  renderBlogList() {
+    const el = document.getElementById('rp-blog-list');
+    if (!el) return;
+    if (!BLOGS.length) {
+      el.innerHTML = '<p class="rp-empty">No posts yet.</p>';
+      return;
+    }
+    el.innerHTML = BLOGS.map((b, i) => `
+      <div class="rp-item" onclick="router.openPost(${i})">
+        ${b.heroImage ? `<img class="rp-item__thumb" src="${b.heroImage}" alt=""${b.heroFilter ? ` style="filter:${b.heroFilter}"` : ''}>` : `<div class="rp-item__thumb-ph" style="background:${b.thumbColor || '#333'}"></div>`}
+        <div>
+          <p class="rp-item__title">${b.title}</p>
+          <div class="rp-item__meta">
+            <div class="rp-av-row">${b.authors.map(a=>`<div class="rp-av">${a.initials}</div>`).join('')}</div>
+            <span class="rp-item__names">${b.authors.map(a=>a.name).join(', ')}</span>
+            <span class="rp-item__sep">&middot;</span>
+            <span class="rp-item__date">${b.date}</span>
+          </div>
+        </div>
+        <span class="rp-item__cta">Read blog ↗</span>
+      </div>
+    `).join('');
+  },
+
+  initEditorialAnimation() {
+    const items = document.querySelectorAll('.editorial__item');
+    if (!items.length) return;
+    const reveal = el => { el.classList.add('is-visible'); el.classList.remove('pre-reveal'); };
+    items.forEach(el => el.classList.add('pre-reveal'));
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { reveal(e.target); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.15 });
+    items.forEach(el => io.observe(el));
+    // Safety net: guarantee content becomes visible even if the observer
+    // never fires (backgrounded tab, slow scroll, browser edge case).
+    setTimeout(() => items.forEach(reveal), 1500);
+  },
+
+    renderHomeBlogGrid() {
+    const el = document.getElementById('home-blog-grid');
+    if (!el) return;
+    const toShow = BLOGS.slice(0, 3);
+    el.innerHTML = toShow.map((b, i) => `
+      <div class="bcard" onclick="router.openPost(${i})">
+        ${b.heroImage ? `<img class="bcard__img" src="${b.heroImage}" alt=""${b.heroFilter ? ` style="filter:${b.heroFilter}"` : ''}>` : `<div class="bcard__img" style="background:${b.heroColor || b.thumbColor || '#333'};aspect-ratio:3/2;border-radius:4px;cursor:pointer;"></div>`}
+        <p class="bcard__body">${b.type} &middot; ${b.date}</p>
+        <p class="bcard__title">${b.title}</p>
+      </div>
+    `).join('');
+  },
+};
+
+/* ══════════════════════════════════════
+   SHOW EXPERIENCE DETAIL
+══════════════════════════════════════ */
+function showExpDetail(idx) {
+  document.querySelectorAll('#pg-experience .rp-feat-card').forEach((el, i) => {
+    el.classList.toggle('is-active', i === idx);
+  });
+  const panelWrap = document.getElementById('exp-detail');
+  panelWrap.hidden = false;
+  if (idx === 0) {
+    panelWrap.innerHTML = renderJourneyHTML();
+    initJourneyInteractions(panelWrap);
+    setTimeout(() => {
+      panelWrap.querySelectorAll('.jrn-item').forEach((itemEl, i) => {
+        const item = EXPERIENCE_JOURNEY[i];
+        if (!item) return;
+        const panel = itemEl.querySelector('.jrn-panel');
+        const tabNames = Object.keys(item.tabs);
+        if (tabNames.length < 2) return;
+        const clone = panel.cloneNode(false);
+        clone.style.cssText = 'position:absolute;visibility:hidden;pointer-events:none;width:' + panel.offsetWidth + 'px;';
+        document.body.appendChild(clone);
+        let maxH = 0;
+        tabNames.forEach(name => { clone.innerHTML = item.tabs[name]; if (clone.scrollHeight > maxH) maxH = clone.scrollHeight; });
+        document.body.removeChild(clone);
+        panel.style.minHeight = maxH + 'px';
+      });
+    }, 150);
+  } else if (idx === 1) {
+    panelWrap.innerHTML = renderInitiativesHTML();
+  } else if (idx === 2) {
+    panelWrap.innerHTML = renderAchievementsHTML();
+  }
+}
+
+/* ══════════════════════════════════════
+   CONTACT FORM HANDLER
+══════════════════════════════════════ */
+function handleContactSubmit(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('.cf-submit');
+  btn.textContent = 'Sent ✓';
+  btn.style.background = 'rgba(0,0,0,.12)';
+  btn.disabled = true;
+  document.getElementById('contact-success').style.display = 'block';
+}
+
+/* ══════════════════════════════════════
+   TYPEWRITER ANIMATION
+══════════════════════════════════════ */
+(function () {
+  const L1 = "Currently investigating (Have a POV? Let’s discuss):";
+  const L2 = "Q. Where is AI’s impact on society/enterprise falling short and can a better applied strategy close that gap?";
+  const el1  = document.getElementById('hw-line1');
+  const el2t = document.getElementById('hw-line2-text');
+  if (!el1 || !el2t) return;
+  function type(setText, text, speed, done) {
+    let i = 0;
+    (function tick() {
+      setText(text.slice(0, i));
+      if (i++ <= text.length) setTimeout(tick, speed);
+      else if (done) done();
+    })();
+  }
+  setTimeout(() => {
+    type(t => { el1.textContent = t; }, L1, 32, () => {
+      setTimeout(() => {
+        type(t => { el2t.textContent = t; }, L2, 28, null);
+      }, 180);
+    });
+  }, 500);
+})();
+
+/* ══════════════════════════════════════
+   BOOT
+══════════════════════════════════════ */
+router.init();
+</script>
+</body>
+</html>
