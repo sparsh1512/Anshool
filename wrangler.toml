@@ -1,0 +1,7 @@
+name = "anshool"
+main = "worker.js"
+compatibility_date = "2025-07-01"
+
+[assets]
+directory = "."
+binding = "ASSETS"

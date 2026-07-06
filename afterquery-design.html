@@ -503,6 +503,7 @@
     .editorial__item.is-visible:nth-child(3) { animation-delay: 0.3s; }
     .editorial__item.is-visible:nth-child(4) { animation-delay: 0.45s; }
     .editorial__item.is-visible:nth-child(5) { animation-delay: 0.6s; }
+    .editorial__item.is-visible:nth-child(6) { animation-delay: 0.75s; }
     .editorial__item:last-child {
       padding-bottom: 0;
     }
@@ -733,6 +734,51 @@
     }
     @media (max-width: 640px) {
       .editorial__exp-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Education entries */
+    .edu-entry {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 0 24px;
+      padding: 20px 0;
+      border-top: 1px solid rgba(0,0,0,0.08);
+    }
+    .edu-entry:last-child { border-bottom: 1px solid rgba(0,0,0,0.08); }
+    .edu-entry__dates {
+      font: 500 12px/1.5 var(--sans);
+      color: rgba(0,0,0,0.4);
+      padding-top: 2px;
+    }
+    .edu-entry__degree {
+      font: 600 14px/1.35 var(--sans);
+      color: #000 !important;
+      margin-bottom: 3px;
+    }
+    .edu-entry__school {
+      font: 400 13px/1.45 var(--sans);
+      color: rgba(0,0,0,0.55);
+      margin-bottom: 20px !important;
+    }
+    .edu-entry__meta {
+      font: 400 12px/1.5 var(--sans);
+      color: rgba(0,0,0,0.45);
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    .edu-entry__meta strong {
+      font-weight: 600;
+      color: rgba(0,0,0,0.6);
+    }
+    .edu-entry__meta a {
+      color: rgba(0,0,0,0.5);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .edu-entry__meta a:hover { color: var(--ink); }
+    @media (max-width: 560px) {
+      .edu-entry { grid-template-columns: 1fr; gap: 4px 0; }
+      .edu-entry__dates { font-size: 11px; }
     }
 
     /* ═══════════════════════════════════════
@@ -1629,6 +1675,7 @@
 
     <!-- Links ABSOLUTELY CENTERED on the page -->
     <ul class="nav__links">
+      <li><a href="#">About</a></li>
       <li><a href="#">Experience</a></li>
       <li><a href="#">Education</a></li>
       <li><a href="#">Research Blogs</a></li>
@@ -1681,7 +1728,7 @@
      H2: serif 38px weight 400 lh 1.1 ls -0.01em rgba(0,0,0,0.8)
      Body: sans 18px weight 500 lh 1.45 rgba(0,0,0,0.6)
 ═══════════════════════════════════════ -->
-<section class="editorial">
+<section class="editorial" id="editorial-about">
   <div class="editorial__inner">
     <p class="editorial__label">About</p>
     <h2 class="editorial__h2">
@@ -1730,6 +1777,27 @@
             <div class="exp-card__logo"><img src="rotary_logo.png" alt="Rotary International"></div>
             <p class="exp-card__role">Member</p>
             <p class="exp-card__desc">Contributed across community service, youth exchange, sustainability, literacy, and mental well-being through fundraising, professional development, and volunteering projects.</p>
+          </div>
+        </div>
+      </div>
+      <div class="editorial__item" id="editorial-education">
+        <p class="editorial__num">06 / Education</p>
+        <div class="edu-entry">
+          <span class="edu-entry__dates">Jun 2022 – May 2024</span>
+          <div>
+            <p class="edu-entry__degree">Master of Business Administration (MBA), Finance / Strategy</p>
+            <p class="edu-entry__school">Narsee Monjee Institute of Management Studies (NMIMS), Mumbai, IN</p>
+            <p class="edu-entry__meta"><strong>CGPA:</strong> 3.94 / 4.00</p>
+            <p class="edu-entry__meta">Additional Credit Course: Sales &amp; Marketing</p>
+          </div>
+        </div>
+        <div class="edu-entry">
+          <span class="edu-entry__dates">Jun 2019 – May 2023</span>
+          <div>
+            <p class="edu-entry__degree">Bachelor of Technology (Honors), Computer Engineering</p>
+            <p class="edu-entry__school">Mukesh Patel School of Technology Management &amp; Engineering (NMIMS), Mumbai, IN</p>
+            <p class="edu-entry__meta"><strong>CGPA:</strong> 3.94 / 4.00</p>
+            <p class="edu-entry__meta">Additional Credit Course: Data Science (IBM) &mdash; <a href="https://www.credly.com/badges/1b84fd89-601f-4ae8-8f87-cad3fc27c6ed" target="_blank" rel="noopener">Show Credential ↗</a></p>
           </div>
         </div>
       </div>
@@ -1939,15 +2007,6 @@
 <!-- ═══════════════════════════════════════
      EDUCATION PAGE
 ═══════════════════════════════════════ -->
-<div id="pg-education" hidden>
-  <div class="rp-wrap">
-    <div class="rp-hero">
-      <p class="rp-hero__eyebrow">Education</p>
-      <h1 class="rp-hero__h1">Academic foundation.</h1>
-      <p class="rp-hero__desc">Degrees, institutions, and the learning that shaped how I think about technology, business, and strategy.</p>
-    </div>
-  </div>
-</div>
 
 <!-- ═══════════════════════════════════════
      BLOG POST PAGE
@@ -2907,15 +2966,15 @@ const router = {
       research:   document.getElementById('pg-research'),
       blog:       document.getElementById('pg-blog'),
       experience: document.getElementById('pg-experience'),
-      education:  document.getElementById('pg-education'),
       contact:    document.getElementById('pg-contact'),
     };
     document.getElementById('bp-back').addEventListener('click', () => this.show('research'));
-    // Nav links — Experience, Education, Research Blogs
+    // Nav links — About, Experience, Education, Research Blogs
     const navLinks = document.querySelectorAll('.nav__links a');
-    navLinks[0].addEventListener('click', e => { e.preventDefault(); this.show('experience'); });
-    navLinks[1].addEventListener('click', e => { e.preventDefault(); this.show('education'); });
-    navLinks[2].addEventListener('click', e => { e.preventDefault(); this.show('research'); });
+    navLinks[0].addEventListener('click', e => { e.preventDefault(); this.showSection('editorial-about'); });
+    navLinks[1].addEventListener('click', e => { e.preventDefault(); this.show('experience'); });
+    navLinks[2].addEventListener('click', e => { e.preventDefault(); this.showSection('editorial-education'); });
+    navLinks[3].addEventListener('click', e => { e.preventDefault(); this.show('research'); });
     // Contact button (nav CTA)
     document.querySelector('.nav__ctas .btn--ghost').addEventListener('click', e => { e.preventDefault(); this.show('contact'); });
     // Logo
@@ -2931,12 +2990,32 @@ const router = {
     this.current = page;
     if (page === 'research') this.renderBlogList();
     if (page === 'experience') showExpDetail(0);
-    // Update active nav link underline
+    // Update active nav link underline — About(0), Experience(1), Education(2), Research Blogs(3)
     const navLinks = document.querySelectorAll('.nav__links a');
     navLinks.forEach(a => a.classList.remove('nav-active'));
-    if (page === 'experience') navLinks[0].classList.add('nav-active');
-    if (page === 'education') navLinks[1].classList.add('nav-active');
-    if (page === 'research' || page === 'blog') navLinks[2].classList.add('nav-active');
+    if (page === 'experience') navLinks[1].classList.add('nav-active');
+    if (page === 'research' || page === 'blog') navLinks[3].classList.add('nav-active');
+  },
+
+  showSection(sectionId) {
+    // Show home page, then scroll to the target section
+    Object.entries(this.pages).forEach(([k,el]) => { el.hidden = (k !== 'home'); });
+    this.current = 'home';
+    const navLinks = document.querySelectorAll('.nav__links a');
+    navLinks.forEach(a => a.classList.remove('nav-active'));
+    if (sectionId === 'editorial-about') navLinks[0].classList.add('nav-active');
+    if (sectionId === 'editorial-education') navLinks[2].classList.add('nav-active');
+    const target = document.getElementById(sectionId);
+    if (target) {
+      requestAnimationFrame(() => {
+        const nav = document.querySelector('.nav');
+        const navH = nav ? nav.offsetHeight : 64;
+        const top = target.getBoundingClientRect().top + window.scrollY - navH;
+        window.scrollTo({ top, behavior: 'smooth' });
+      });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
   },
 
   openPost(idx) {
