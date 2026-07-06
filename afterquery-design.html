@@ -453,7 +453,7 @@
        Body: sans 18px weight 500 lh 1.45 color rgba(0,0,0,0.6)
     ═══════════════════════════════════════ */
     .editorial {
-      padding: var(--sp20) 0;
+      padding: var(--sp20) 0 var(--sp8);
     }
     .editorial__inner {
       width: min(calc(100% - 2rem), 688px);
@@ -734,6 +734,62 @@
     }
     @media (max-width: 640px) {
       .editorial__exp-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ═══ TRUSTED BY SCROLLER ═══ */
+    .trusted-by {
+      padding: 16px 0 48px;
+    }
+    .trusted-by__inner {
+      width: min(calc(100% - 2rem), 688px);
+      margin-left: clamp(1rem, 22vw, 340px);
+    }
+    .trusted-by__label {
+      font-family: var(--serif);
+      font-size: 17px;
+      font-weight: 700;
+      color: rgba(0,0,0,0.55);
+      margin-bottom: 32px;
+      text-align: center;
+    }
+    .trusted-by__track-wrap {
+      overflow: hidden;
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    }
+    .trusted-by__track {
+      display: flex;
+      align-items: center;
+      gap: 52px;
+      width: max-content;
+      animation: marquee-scroll 18s linear infinite;
+    }
+    .trusted-by__track:hover { animation-play-state: paused; }
+    @keyframes marquee-scroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .trusted-by__logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.40;
+      filter: grayscale(1);
+      transition: opacity 0.25s, filter 0.25s;
+      flex-shrink: 0;
+    }
+    .trusted-by__logo:hover { opacity: 0.8; filter: grayscale(0); }
+    .trusted-by__logo img {
+      height: 36px;
+      width: auto;
+      max-width: 150px;
+      object-fit: contain;
+      display: block;
+    }
+    /* continuation of editorial for items 05-06 */
+    .editorial-cont {
+      padding-top: var(--sp16);
+      padding-bottom: var(--sp20);
     }
 
     /* Education entries */
@@ -1751,6 +1807,41 @@
         <p class="editorial__num">04 / Principles</p>
         <p>I value clarity, ownership, and impact. I'm driven by first-principles thinking, questioning assumptions, and getting to the root of how things actually work. I'm most energised when working at the intersection of ambiguity and consequence.</p>
       </div>
+    </div><!-- /.editorial__body -->
+  </div><!-- /.editorial__inner -->
+</section><!-- /.editorial -->
+
+<!-- ═══════════════════════════════════════
+     TRUSTED BY SCROLLER
+═══════════════════════════════════════ -->
+<section class="trusted-by">
+  <div class="trusted-by__inner">
+    <p class="trusted-by__label">TRUSTED BY</p>
+    <div class="trusted-by__track-wrap">
+      <div class="trusted-by__track">
+        <!-- Set 1 -->
+        <div class="trusted-by__logo"><img src="DeccanAI_logo.png" alt="Deccan AI"></div>
+        <div class="trusted-by__logo"><img src="maruti_logo.png" alt="Maruti Suzuki"></div>
+        <div class="trusted-by__logo"><img src="motilal_logo.png" alt="Motilal Oswal"></div>
+        <div class="trusted-by__logo"><img src="ajanta_logo.png" alt="Ajanta Pharma"></div>
+        <div class="trusted-by__logo"><img src="rotary_logo.png" alt="Rotary International"></div>
+        <!-- Set 2 (duplicate for seamless loop) -->
+        <div class="trusted-by__logo"><img src="DeccanAI_logo.png" alt="Deccan AI"></div>
+        <div class="trusted-by__logo"><img src="maruti_logo.png" alt="Maruti Suzuki"></div>
+        <div class="trusted-by__logo"><img src="motilal_logo.png" alt="Motilal Oswal"></div>
+        <div class="trusted-by__logo"><img src="ajanta_logo.png" alt="Ajanta Pharma"></div>
+        <div class="trusted-by__logo"><img src="rotary_logo.png" alt="Rotary International"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     EDITORIAL CONTINUATION (05–06)
+═══════════════════════════════════════ -->
+<div class="editorial-cont">
+  <div class="editorial__inner">
+    <div class="editorial__body">
       <div class="editorial__item" id="real-world-experience">
         <p class="editorial__num">05 / Real-world Experience</p>
         <div class="editorial__logo"><img src="DeccanAI_logo.png" alt="Deccan AI"></div>
@@ -1801,9 +1892,9 @@
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</section>
+    </div><!-- /.editorial__body -->
+  </div><!-- /.editorial__inner -->
+</div><!-- /.editorial-cont -->
 
 <!-- RESEARCH SECTION ROW on homepage -->
 <div class="wrap">
