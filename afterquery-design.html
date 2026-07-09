@@ -3514,7 +3514,7 @@ const BLOGS = [
       <p>So as every major lab raced to train reasoning models with RL, a familiar ceiling showed up. The math and code benchmarks got saturated. Other real-world domain benchmarks like HealthBench and GPQA-Diamond are not. And neither are most of the domains that actually matter in production: medicine, law, scientific reasoning, clinical documentation. The problem is not the model. The problem is the reward signal. When you cannot write a test case that checks whether a diagnosis is correct, how do you train?</p>
       <p>That was the question Gunjal et al. from Scale AI asked in <strong>Rubrics as Rewards (RaR)</strong>. Their answer: decompose fuzzy quality into explicit, checkable criteria. RLVR-shaped reward for RLHF-shaped problems.</p>
       <figure style="margin:32px 0;">
-        <img src="RaR_Image1.png" alt="RaR: RLVR-shaped reward for RLHF-shaped problems" style="max-width:836px;width:100%;display:block;margin:0 auto;border-radius:8px;">
+        <img src="RaR_image1.png" alt="RaR: RLVR-shaped reward for RLHF-shaped problems" style="max-width:836px;width:100%;display:block;margin:0 auto;border-radius:8px;">
       </figure>
       <p>The researchers trained Qwen2.5-7B on two datasets: RaR-Medicine (20k medical reasoning prompts) and RaR-Science (roughly 20k prompts aligned with GPQA-Diamond categories). For each training example, they generated an instance-specific rubric using stronger models (o3-mini and GPT-4o), conditioned on reference answers as a proxy for expert supervision. The policy was trained with GRPO, using an LLM judge to score completions against the rubric. Evaluated on HealthBench (5,000 clinical conversations with physician-authored rubrics) and GPQA-Diamond (550 graduate-level multiple-choice questions).</p>
       <p>The challenge was this: there is no test suite for &ldquo;was this medical advice correct.&rdquo; Without structure, the judge&rsquo;s number is noise. Think of asking a junior doctor to grade exam answers 1&ndash;10 with no rubric. You get their bias and half-baked knowledge with no verification. Give them a rubric, and you get a grade.</p>
@@ -3564,7 +3564,7 @@ const BLOGS = [
       </ol>
       <p>RaR did not only ask, &lsquo;did the model score well on a rubric?&rsquo; It asked, &lsquo;do rubrics as a reward signal produce a policy that generalizes: to MCQ, to held-out domains, to judge topics the model was never trained against?&rsquo; That distinction is important.</p>
       <figure style="margin:32px 0;">
-        <img src="RaR_Image2.png" alt="RaR Paper's Focus diagram" style="max-width:742px;width:100%;display:block;margin:0 auto;border-radius:8px;">
+        <img src="RaR_image2.png" alt="RaR Paper's Focus diagram" style="max-width:742px;width:100%;display:block;margin:0 auto;border-radius:8px;">
       </figure>
 
       <h2 id="main-findings">Main Findings</h2>
@@ -4574,7 +4574,7 @@ function downloadResume() {
 
     var titleEl = document.createElement('div');
     titleEl.className = 'blog-nav-panel__title';
-    titleEl.textContent = 'In this article';
+    titleEl.textContent = 'In this Blog';
     panel.appendChild(titleEl);
 
     headings.forEach(function(h, i) {
