@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Anshool Agarwal</title>
 
   <!--
@@ -64,7 +64,12 @@
        RESET
     ═══════════════════════════════════════ */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: auto; }
+    html {
+      scroll-behavior: auto;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      overflow-x: hidden;
+    }
     body {
       font-family: var(--sans);
       font-size: 16px;
@@ -72,7 +77,9 @@
       color: var(--ink);
       background: var(--bg);
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
       line-height: 1.5;
+      overflow-x: hidden;
     }
     a    { color: inherit; text-decoration: none; }
     img  { display: block; max-width: 100%; }
@@ -1421,7 +1428,7 @@
 
       /* ─ Footer ─ */
       .footer__cols { grid-template-columns: 1fr 1fr; }
-      .footer__inner { flex-direction: column; gap: 16px; }
+      .footer__inner { flex-direction: column; gap: 16px; padding-bottom: env(safe-area-inset-bottom); }
 
       /* ─ Home research row ─ */
       .sec-row__top { flex-direction: column; align-items: flex-start; gap: 8px; }
@@ -1849,79 +1856,66 @@
       }
       .mob-read-progress.is-reading { opacity: 1; }
 
-      /* ─ Hero segments: tap-to-activate on mobile (no hover) ─ */
-  (function() {
-    document.querySelectorAll('.hero__seg').forEach(function(seg) {
-      seg.addEventListener('click', function() {
-        var parent = seg.closest('.hero__segments');
-        parent.querySelectorAll('.hero__seg').forEach(function(s) { s.classList.remove('mob-seg-active'); });
-        seg.classList.add('mob-seg-active');
-        setTimeout(function() { seg.classList.remove('mob-seg-active'); }, 900);
-      });
-    });
-  })();
 
 
-  /* ─ Blog section navigator FAB — dark immersive glass ─ */
+
+
+
+  /* ─ Blog section navigator FAB — site-matched cream glass ─ */
       .blog-nav-fab {
         position: fixed;
-        bottom: 76px;
-        right: 14px;
-        width: 44px; height: 44px;
-        background: rgba(8,8,8,0.72);
-        backdrop-filter: blur(24px) saturate(1.8);
-        -webkit-backdrop-filter: blur(24px) saturate(1.8);
-        color: rgba(255,255,255,.84);
+        bottom: calc(80px + env(safe-area-inset-bottom));
+        right: 16px;
+        width: 46px; height: 46px;
+        background: rgba(16, 14, 12, 0.58);
+        backdrop-filter: blur(20px) saturate(1.8);
+        -webkit-backdrop-filter: blur(20px) saturate(1.8);
+        color: rgba(255,255,255,.9);
         border-radius: 50%;
         display: flex; align-items: center; justify-content: center;
         z-index: 201;
         opacity: 0;
-        transform: scale(0.6) translateY(10px);
-        transition: opacity .38s cubic-bezier(.22,.85,.32,1), transform .38s cubic-bezier(.22,.85,.32,1), background .22s;
+        transform: scale(0.55) translateY(12px);
+        transition: opacity .42s cubic-bezier(.22,.85,.32,1), transform .42s cubic-bezier(.22,.85,.32,1), background .2s;
         pointer-events: none;
-        border: 1px solid rgba(255,255,255,.1);
+        border: 1px solid rgba(255,255,255,.15);
         cursor: pointer;
-        box-shadow: 0 2px 18px rgba(0,0,0,.44), inset 0 1px 0 rgba(255,255,255,.1), inset 0 0 0 1px rgba(255,255,255,.04);
+        box-shadow: 0 4px 20px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.12);
         -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
         will-change: transform, opacity;
-        overflow: hidden;
       }
-      .blog-nav-fab.is-visible {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-        pointer-events: auto;
-      }
-      .blog-nav-fab:active {
-        transform: scale(0.9) translateY(0) !important;
-        background: rgba(4,4,4,0.9) !important;
-      }
+      .blog-nav-fab.is-visible { opacity: 1; transform: scale(1) translateY(0); pointer-events: auto; }
+      .blog-nav-fab:active { transform: scale(0.88) translateY(0) !important; transition-duration: .08s !important; }
       .blog-nav-fab.is-open {
-        background: rgba(4,4,4,0.9);
-        border-color: rgba(255,255,255,.18);
-        box-shadow: 0 4px 28px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.12), inset 0 0 0 1px rgba(255,255,255,.06);
+        background: rgba(8, 6, 4, 0.78);
+        border-color: rgba(255,255,255,.22);
       }
-      /* Icon swap: chapters ↔ close */
       .blog-nav-fab .fab-icon-menu,
       .blog-nav-fab .fab-icon-close {
         position: absolute;
-        transition: opacity .28s cubic-bezier(.22,.85,.32,1), transform .32s cubic-bezier(.22,.85,.32,1);
+        transition: opacity .28s cubic-bezier(.22,.85,.32,1), transform .34s cubic-bezier(.22,.85,.32,1);
       }
-      .blog-nav-fab .fab-icon-close { opacity: 0; transform: rotate(-90deg) scale(0.5); }
-      .blog-nav-fab.is-open .fab-icon-menu { opacity: 0; transform: rotate(90deg) scale(0.5); }
+      .blog-nav-fab .fab-icon-close { opacity: 0; transform: rotate(-80deg) scale(0.4); }
+      .blog-nav-fab.is-open .fab-icon-menu { opacity: 0; transform: rotate(80deg) scale(0.4); }
       .blog-nav-fab.is-open .fab-icon-close { opacity: 1; transform: rotate(0deg) scale(1); }
 
-      /* Panel */
+      /* ── Panel: cream frosted glass matching site palette ── */
       .blog-nav-panel {
         position: fixed;
-        bottom: 132px;
+        bottom: calc(138px + env(safe-area-inset-bottom));
         right: 10px;
-        width: 234px;
-        background: rgba(8,8,8,0.86);
-        backdrop-filter: blur(44px) saturate(1.6);
-        -webkit-backdrop-filter: blur(44px) saturate(1.6);
-        border-radius: 20px;
-        box-shadow: 0 22px 64px rgba(0,0,0,.5), 0 6px 20px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.1), inset 0 0 0 1px rgba(255,255,255,.05);
-        border: 1px solid rgba(255,255,255,.08);
+        width: 244px;
+        background: rgba(248, 248, 243, 0.78);
+        backdrop-filter: blur(48px) saturate(2.2);
+        -webkit-backdrop-filter: blur(48px) saturate(2.2);
+        border-radius: 18px;
+        box-shadow:
+          0 20px 56px rgba(0,0,0,.12),
+          0 4px 14px rgba(0,0,0,.07),
+          inset 0 1px 0 rgba(255,255,255,.95),
+          inset 0 0 0 1px rgba(255,255,255,.5);
+        border: 1px solid rgba(0,0,0,.07);
         padding: 14px 0 10px;
         z-index: 200;
         opacity: 0;
@@ -1929,77 +1923,89 @@
         transform-origin: bottom right;
         transition: opacity .28s cubic-bezier(.22,.85,.32,1), transform .3s cubic-bezier(.22,.85,.32,1);
         pointer-events: none;
-        max-height: 54vh;
+        max-height: 56vh;
         overflow-y: auto;
         scrollbar-width: none;
       }
       .blog-nav-panel::-webkit-scrollbar { display: none; }
-      .blog-nav-panel.is-open {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-        pointer-events: auto;
-      }
+      .blog-nav-panel.is-open { opacity: 1; transform: scale(1) translateY(0); pointer-events: auto; }
+
+      /* Header label */
       .blog-nav-panel__title {
         font: 500 9px/1 var(--sans);
-        letter-spacing: .15em;
+        letter-spacing: .16em;
         text-transform: uppercase;
-        color: rgba(255,255,255,.28);
+        color: rgba(0,0,0,.3);
         padding: 0 16px 11px;
-        border-bottom: 1px solid rgba(255,255,255,.07);
-        margin-bottom: 5px;
+        border-bottom: 1px solid rgba(0,0,0,.06);
+        margin-bottom: 4px;
       }
-      /* Item stagger animation */
+
+      /* Items */
       .blog-nav-item {
         position: relative;
         display: flex;
-        align-items: center;
-        padding: 10px 16px 10px 32px;
-        font: 400 13px/1.28 var(--sans);
-        color: rgba(255,255,255,.35);
+        align-items: baseline;
+        gap: 10px;
+        padding: 9px 16px 9px 16px;
+        font: 400 14px/1.28 var(--serif);
+        color: rgba(0,0,0,.42);
         cursor: pointer;
         -webkit-tap-highlight-color: transparent;
-        transition: color .18s, background .18s, opacity .3s cubic-bezier(.22,.85,.32,1), transform .3s cubic-bezier(.22,.85,.32,1);
-        letter-spacing: -.008em;
+        touch-action: manipulation;
+        letter-spacing: 0;
         opacity: 0;
         transform: translateX(10px);
+        transition:
+          color .18s,
+          opacity .3s cubic-bezier(.22,.85,.32,1),
+          transform .3s cubic-bezier(.22,.85,.32,1);
+        overflow: hidden;
       }
-      .blog-nav-panel.is-open .blog-nav-item {
-        opacity: 1;
-        transform: translateX(0);
-      }
-      .blog-nav-item:active { background: rgba(255,255,255,.06); border-radius: 10px; }
       .blog-nav-item::before {
         content: '';
         position: absolute;
-        left: 14px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 5px; height: 5px;
-        border-radius: 50%;
-        background: rgba(255,255,255,.18);
-        transition: background .22s, transform .22s cubic-bezier(.22,.85,.32,1), width .22s, height .22s;
+        inset: 2px 6px;
+        border-radius: 9px;
+        background: rgba(0,0,0,.04);
+        opacity: 0;
+        transition: opacity .18s;
+        z-index: -1;
+      }
+      .blog-nav-panel.is-open .blog-nav-item { opacity: 1; transform: translateX(0); }
+      .blog-nav-item:active::before { opacity: 1; }
+      .blog-nav-item__num {
+        font: 500 9px/1 var(--sans);
+        color: rgba(0,0,0,.2);
+        min-width: 14px;
+        flex-shrink: 0;
+        letter-spacing: .02em;
+        padding-top: 3px;
+        transition: color .18s;
+      }
+      .blog-nav-item__text {
+        flex: 1;
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       .blog-nav-item.is-active {
-        color: rgba(255,255,255,.88);
-        font-weight: 500;
+        color: rgba(0,0,0,.88);
       }
-      .blog-nav-item.is-active::before {
-        background: rgba(255,255,255,.9);
-        transform: translateY(-50%) scale(1.3);
+      .blog-nav-item.is-active::before { opacity: 1; }
+      .blog-nav-item.is-active .blog-nav-item__num {
+        color: rgba(0,0,0,.5);
       }
+      /* H3 sub-items indented */
       .blog-nav-item.is-h3 {
-        padding-left: 46px;
-        font-size: 12px;
-        color: rgba(255,255,255,.22);
+        padding-left: 24px;
+        font-size: 13px;
+        color: rgba(0,0,0,.28);
       }
-      .blog-nav-item.is-h3::before {
-        left: 28px;
-        width: 3px; height: 3px;
-      }
-      .blog-nav-item.is-h3.is-active {
-        color: rgba(255,255,255,.68);
-      }
-    }
+      .blog-nav-item.is-h3 .blog-nav-item__num { font-size: 8.5px; }
+      .blog-nav-item.is-h3.is-active { color: rgba(0,0,0,.66); }
+    } /* end @media (max-width:768px) mobile immersive */
 
     /* ══════════════════════════════════════
        RESEARCH PAGE  ── pixel-exact AfterQuery measurements
@@ -2509,7 +2515,33 @@
       .rp-item, .bp-rel-item { grid-template-columns: 88px 1fr; }
       .rp-item__cta, .bp-rel-cta { display: none; }
     }
-    /* ══════════════════════════════════════
+    /* ══ Phone alignment fixes — iOS Safari & Android Chrome ══ */
+    @media (max-width: 768px) {
+      /* Smaller article padding on phone */
+      .bp-article { padding: 44px 0 80px; }
+      /* Anchor scroll clears sticky nav (52px mobile height) */
+      .bp-body h2, .bp-body h3, .bp-body h4 { scroll-margin-top: 64px; }
+      /* Research/blog hero tighter on phone */
+      .rp-hero { padding: 36px 0 24px; }
+      /* Blog post header */
+      .bp-h1 { font-size: 26px; line-height: 1.12; margin-bottom: 20px; }
+      .bp-eyebrow { font-size: 12px; margin-bottom: 14px; }
+      .bp-authors { margin-bottom: 22px; }
+      .bp-content { margin-top: 28px; }
+      .bp-back { padding: 12px 0 22px; display: block; }
+      /* Eliminate double-tap zoom delay on all tap targets */
+      a, button, [role="button"],
+      .mob-tab-bar__item, .mob-exp-tab,
+      .blog-nav-fab, .blog-nav-item,
+      .rp-item, .bp-back, .rp-feat-card { touch-action: manipulation; }
+    }
+    @media (max-width: 380px) {
+      .bp-article { padding: 28px 0 60px; }
+      .bp-h1 { font-size: 22px; }
+      .rp-hero__h1 { font-size: 22px; }
+    }
+
+        /* ══════════════════════════════════════
        ADD BLOG MODAL
     ══════════════════════════════════════ */
     .modal-backdrop {
@@ -4549,7 +4581,14 @@ function downloadResume() {
       var item = document.createElement('div');
       item.className = 'blog-nav-item' + (h.tagName === 'H3' ? ' is-h3' : '');
       item.dataset.id = h.id;
-      item.textContent = h.textContent.trim();
+      var numEl = document.createElement('span');
+      numEl.className = 'blog-nav-item__num';
+      numEl.textContent = String(i + 1).padStart(2, '0');
+      var txtEl = document.createElement('span');
+      txtEl.className = 'blog-nav-item__text';
+      txtEl.textContent = h.textContent.trim();
+      item.appendChild(numEl);
+      item.appendChild(txtEl);
       /* Staggered entry delay */
       item.style.transitionDelay = (i * 32) + 'ms';
       item.addEventListener('click', function() {
@@ -4564,15 +4603,20 @@ function downloadResume() {
     document.body.appendChild(panel);
     _blogNavPanel = panel;
 
-    /* ── Show / hide FAB based on scroll ── */
+    /* ── FAB: appear immediately, hide only when at very top of page ── */
     var fabVisible = false;
     function updateFabVisibility() {
-      var should = window.scrollY > 90;
+      var should = window.scrollY > 10;
       if (should !== fabVisible) {
         fabVisible = should;
         fab.classList.toggle('is-visible', should);
       }
     }
+    /* Show right away with entrance delay */
+    setTimeout(function() {
+      fab.classList.add('is-visible');
+      fabVisible = true;
+    }, 400);
 
     /* ── Track active section ── */
     function updateNavActive() {
@@ -4616,13 +4660,13 @@ function downloadResume() {
     document.addEventListener('click', _blogNavClickHandler);
 
     _blogNavScrollHandler = function() {
+      /* Hide FAB only at very top (scrollY <= 10) */
       updateFabVisibility();
       if (panelOpen) updateNavActive();
     };
     window.addEventListener('scroll', _blogNavScrollHandler, { passive: true });
 
-    /* Initial check */
-    updateFabVisibility();
+    /* Initial visibility handled by setTimeout above; scroll keeps it synced */
   }
 
 
